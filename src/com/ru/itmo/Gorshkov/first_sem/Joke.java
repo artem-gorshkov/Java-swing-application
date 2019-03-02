@@ -1,4 +1,4 @@
-package com.ru.itmo.Gorshkov;
+package com.ru.itmo.Gorshkov.first_sem;
 
 import java.io.IOException;
 import java.nio.file.Paths;

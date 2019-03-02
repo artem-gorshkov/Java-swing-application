@@ -1,4 +1,4 @@
-package com.ru.itmo.Gorshkov;
+package com.ru.itmo.Gorshkov.first_sem;
 
 abstract class Tree {
     private TypeOfTree type;

@@ -1,4 +1,4 @@
-package com.ru.itmo.Gorshkov;
+package com.ru.itmo.Gorshkov.first_sem;
 
 public class ImmaterialProperty extends Property {
     public ImmaterialProperty(String name) {

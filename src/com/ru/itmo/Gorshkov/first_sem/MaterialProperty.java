@@ -1,4 +1,4 @@
-package com.ru.itmo.Gorshkov;
+package com.ru.itmo.Gorshkov.first_sem;
 
 public class MaterialProperty extends Property {
     public MaterialProperty(String name) {

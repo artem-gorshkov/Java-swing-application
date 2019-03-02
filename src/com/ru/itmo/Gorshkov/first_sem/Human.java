@@ -1,4 +1,4 @@
-package com.ru.itmo.Gorshkov;
+package com.ru.itmo.Gorshkov.first_sem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
