@@ -29,7 +29,7 @@ abstract class Property {
         if (otherObject == null) return false;
         if (getClass() != otherObject.getClass()) return false;
         Property other = (Property) otherObject;
-        return this.getName().equals(other.getName()) && this.getOwner().equals(other.getOwner());
+        return this.getName().equals(other.getName()) && (this.getOwner() == other.getOwner());
     }
     public int hashCode()
     {
@@ -37,6 +37,11 @@ abstract class Property {
     }
     public String toString()
     {
-        return getClass().getName() + "[name=" + this.getName() + ",owner=" + this.getOwner().toString() + "]";
+        if(this.owner!=null) {
+            return getClass().getName() + "[name=" + this.getName() + ",owner=" + this.getOwner().getName() + "]";
+        }
+        else {
+            return getClass().getName() + "[name=" + this.getName() + ",owner=No]";
+        }
     }
 }

@@ -65,10 +65,6 @@ public class Robber extends Human implements FearOfFlyableHuman, Steal {
         Robber other = (Robber) otherObject;
         return super.equals(other) && this.getVictim().equals(other.getVictim());
     }
-    public int hashCode()
-    {
-        return Objects.hash(this.getName(), this.getCondition(), this.getAllProperty(), this.getCords(), victim);
-    }
     public String toString() {
         return super.toString() + "[victim=" + this.getVictim().toString() + "]";
     }

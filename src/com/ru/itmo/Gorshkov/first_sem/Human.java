@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 
-public class Human {
+public class Human implements Comparable<Human>{
     private String name;
     private Condition condition;
     private byte countCondition = 0;
@@ -18,11 +18,18 @@ public class Human {
         condition = Condition.CALM;
         allProperty = new ArrayList<Property>();
         allProperty.ensureCapacity(5);
+        this.sit = false;
         System.out.println("Создан человек " + this.getName());
     }
     public String getName() {
         return name;
     }
+
+    @Override
+    public int compareTo(Human human) {
+        return this.getName().compareTo(human.getName());
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -44,6 +51,7 @@ public class Human {
         }
         return propertyArray;
     }
+
     public void delProperty(Property property) {
         this.allProperty.remove(property);
         System.out.println("У человека " + this.getName() + " пропало имущество: " + property.getName());
@@ -61,8 +69,11 @@ public class Human {
         this.cordX = cordX;
         System.out.println(this.getName() + " изменил координаты на " + cordX + " " + cordY);
     }
-    public double[] getCords() {
-        return new double[] {cordX, cordY};
+    public double getCordX() {
+        return this.cordX;
+    }
+    public double getCordY() {
+        return this.cordY;
     }
     public void upCountCondition() {
         this.countCondition++;
@@ -101,7 +112,7 @@ public class Human {
         if (otherObject == null) return false;
         if (getClass() != otherObject.getClass()) return false;
         Human other = (Human) otherObject;
-        return this.getName().equals(other.getName()) && this.getCondition().equals(other.getCondition()) && Arrays.equals(this.getCords(), other.getCords()) && Arrays.equals(this.getAllProperty(), other.getAllProperty());
+        return this.getName().equals(other.getName()) && this.getCondition().equals(other.getCondition()) && this.getCordY() == other.getCordY() && this.getCordX() == other.getCordX()&& Arrays.equals(this.getAllProperty(), other.getAllProperty());
     }
     public int hashCode()
     {
@@ -109,7 +120,12 @@ public class Human {
     }
     public String toString()
     {
-        return getClass().getName() + "[name=" + this.getName() + ",condition=" + this.getCondition().toString() + ",allProperty=" + this.getAllProperty().toString() + ",Cords=" + this.getCords().toString() + "]";
+        String str = "[";
+        for (int i = 0;i < allProperty.size(); i++) {
+            str = str + allProperty.get(i).toString() + ", ";
+        }
+        str = str + "]";
+        return getClass().getName() + "[name=" + this.getName() + ",condition=" + this.getCondition().toString() + ",allProperty=" + str + ",CordX=" + this.getCordX() + ", CordY=" + this.getCordY() + "]";
     }
     public TypeOfTree lookAt(Tree tree, MakeLaugh makeLaugh) throws TooFarToTreeExeption {
         if(tree instanceof LittleTree) {
