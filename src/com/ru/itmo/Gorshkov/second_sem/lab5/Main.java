@@ -14,7 +14,7 @@ public class Main {
     private static final String path ="PathLab5";
     public static void main(String args[]) {
         ManagerCollection coll = new ManagerCollection(path);
-        coll.exportfromfile();
+        coll.exportfromfile(path);
         Console console = new Console(coll);
         console.exec();
     }

@@ -38,10 +38,10 @@ abstract class Property {
     public String toString()
     {
         if(this.owner!=null) {
-            return getClass().getName() + "[name=" + this.getName() + ",owner=" + this.getOwner().getName() + "]";
+            return getClass().getSimpleName() + "[name=" + this.getName() + ",owner=" + this.getOwner().getName() + "]";
         }
         else {
-            return getClass().getName() + "[name=" + this.getName() + ",owner=No]";
+            return getClass().getSimpleName() + "[name=" + this.getName() + ",owner=No]";
         }
     }
 }

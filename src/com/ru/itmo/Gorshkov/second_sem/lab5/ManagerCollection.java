@@ -29,7 +29,7 @@ public class ManagerCollection {
     }
     public Human put(Human value) {
         if(value==null) {
-            System.err.println("");
+            System.err.println("Object is null");
             return null;
         }
         else {
@@ -37,11 +37,13 @@ public class ManagerCollection {
             return collection.put(value.getName(), value);
         }
     }
-//    public Human remove(String key) {
-//        collection.remove(key);
-//
-//    }
-    public void exportfromfile() {
+    public Human remove(String key) {
+        Human hum = collection.remove(key);
+        saveToFile(collection);
+        return hum;
+    }
+    public void exportfromfile(String path) {
+        this.path = path;
         try (Scanner scan = new Scanner(new File(System.getenv(path)).toPath())) {
             while(scan.hasNextLine()) {
                 String str = scan.nextLine();
@@ -52,11 +54,13 @@ public class ManagerCollection {
         }
     }
     public Human parseHuman(String str) {
-        String property = str.substring(str.indexOf("{\"name\":"), str.indexOf("\"}]") + 2);
         try {
             Human hum = JSON.parseObject(str, Human.class);
-            MaterialProperty prop = JSON.parseObject(property, MaterialProperty.class);
-            hum.addProperty(prop);
+            if (str.contains("{\"name\":")) {
+                String property = str.substring(str.indexOf("{\"name\":"), str.indexOf("\"}]") + 2);
+                MaterialProperty prop = JSON.parseObject(property, MaterialProperty.class);
+                hum.addProperty(prop);
+            }
             return hum;
         } catch (JSONException e) {
             System.err.println("Can't parse Human \nInvalid syntax \nTry to use \"help\" for more information");
@@ -72,24 +76,18 @@ public class ManagerCollection {
         } catch (FileNotFoundException e) {
             System.err.println("Can't save information in file\nFile not found");
         } catch (JSONException e) {
-            System.err.println("can't save Human to file\nInvalid syntax");
+            System.err.println("Can't save Human to file\nInvalid syntax");
         }
     }
-//    public void saveToFile(TreeMap<String, Human> collection) {
-//        try(PrintWriter writer = new PrintWriter(this.path)) {
-//            for(Map.Entry<String, Human> entry : collection) {
-//
-//            }
-//
-//            String str = JSON.toJSONString(hum);
-//            collection.forEach((String, Human) -> { JSON.toJSONString(collection.get(key)));
-//            });
-//            writer.println();
-//            writer.append(str);
-//        } catch (FileNotFoundException e) {
-//            System.err.println("Can't save information in file\nFile not found");
-//        } catch (JSONException e) {
-//            System.err.println("can't save Human to file\nInvalid syntax");
-//        }
-//    }
+    public void saveToFile(TreeMap<String, Human> collection) {
+        try(PrintWriter writer = new PrintWriter(this.path)) {
+            collection.forEach((String key, Human value) -> {
+                writer.println(JSON.toJSONString(collection.get(key)));
+            });
+        } catch (FileNotFoundException e) {
+            System.err.println("Can't save information in file\nFile not found");
+        } catch (JSONException e) {
+            System.err.println("Can't save Human to file\nInvalid syntax");
+        }
+    }
 }

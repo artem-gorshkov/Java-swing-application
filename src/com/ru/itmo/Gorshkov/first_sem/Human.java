@@ -125,7 +125,7 @@ public class Human implements Comparable<Human>{
             str = str + allProperty.get(i).toString() + ", ";
         }
         str = str + "]";
-        return getClass().getName() + "[name=" + this.getName() + ",condition=" + this.getCondition().toString() + ",allProperty=" + str + ",CordX=" + this.getCordX() + ", CordY=" + this.getCordY() + "]";
+        return getClass().getSimpleName() + "[name=" + this.getName() + ",condition=" + this.getCondition().toString() + ",allProperty=[" + str + ", CordX=" + this.getCordX() + ", CordY=" + this.getCordY() + "]";
     }
     public TypeOfTree lookAt(Tree tree, MakeLaugh makeLaugh) throws TooFarToTreeExeption {
         if(tree instanceof LittleTree) {
