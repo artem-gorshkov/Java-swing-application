@@ -58,11 +58,9 @@ public class Human implements Comparable<Human>{
     }
     public void setCordX(double cordX) {
         this.cordX = cordX;
-        System.out.println(this.getName() + " изменил координату X на " + cordX);
     }
     public void setCordY(double cordY) {
         this.cordY = cordY;
-        System.out.println(this.getName() + " изменил координату Y на " + cordY);
     }
     public void setCords(double cordX, double cordY) {
         this.cordY = cordY;
@@ -70,10 +68,10 @@ public class Human implements Comparable<Human>{
         System.out.println(this.getName() + " изменил координаты на " + cordX + " " + cordY);
     }
     public double getCordX() {
-        return this.cordX;
+        return cordX;
     }
     public double getCordY() {
-        return this.cordY;
+        return cordY;
     }
     public void upCountCondition() {
         this.countCondition++;
@@ -122,10 +120,10 @@ public class Human implements Comparable<Human>{
     {
         String str = "[";
         for (int i = 0;i < allProperty.size(); i++) {
-            str = str + allProperty.get(i).toString() + ", ";
+            str = str + allProperty.get(i).toString() + ",";
         }
         str = str + "]";
-        return getClass().getSimpleName() + "[name=" + this.getName() + ",condition=" + this.getCondition().toString() + ",allProperty=[" + str + ", CordX=" + this.getCordX() + ", CordY=" + this.getCordY() + "]";
+        return getClass().getSimpleName() + "[name=" + this.getName() + ",condition=" + this.getCondition().toString() + ",allProperty=" + str + ", CordX=" + this.getCordX() + ", CordY=" + this.getCordY() + "]";
     }
     public TypeOfTree lookAt(Tree tree, MakeLaugh makeLaugh) throws TooFarToTreeExeption {
         if(tree instanceof LittleTree) {

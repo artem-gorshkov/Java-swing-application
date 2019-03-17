@@ -4,17 +4,19 @@ import com.ru.itmo.Gorshkov.first_sem.Human;
 
 import java.util.Scanner;
 
-public class Console {
+class Console {
     private Scanner scan = new Scanner(System.in);
     private boolean run = false;
     private ManagerCollection managerCollection;
-    public static final String help = "eto help";
+    private static final String help = "eto help";
+    private static final String invalidSyntax = "Invalid syntax\nTry to use \"help\" to get more information";
+    private static final String notFoundArgument = "Not found argument\nTry to use \"help\" to get more information";
 
     Console(ManagerCollection managerCollection) {
         this.managerCollection = managerCollection;
     }
 
-    public void exec() {
+    void exec() {
         if (run) {
             throw new RuntimeException("console running already");
         }
@@ -30,22 +32,17 @@ public class Console {
                 cmnd = callcmnd.substring(0, callcmnd.indexOf(' '));
                 arg = callcmnd.substring(callcmnd.indexOf(' ') + 1);
                 if (arg.length() == 0) {
-                    System.err.println("Not found argument\nTry to use \"help\" to get more information");
+                    System.err.println(notFoundArgument);
                 } else {
                     switch (cmnd) {
                         case "insert":
-                            if (!arg.matches("\\{[\\s\\S]*\\}") || !arg.contains(" ")) {
-                                System.err.println("Invalid syntax\nTry to use \"help\" to get more information");
+                            if (!arg.matches("\\w*\\s\\{[\\s\\S]*\\}")) {
+                                System.err.println(invalidSyntax);
                             } else {
-                                System.out.println(arg);
-                                String key = arg.substring(1, arg.indexOf('}') - 1);
-                                String element = arg.substring(arg.indexOf('}') + 1);
-                                if (!element.matches("\\{[\\s\\S]*\\} \\{[\\s\\S]*\\}")) {
-                                    System.err.println("Invalid syntax\nTry to use \"help\" to get more information");
-                                } else {
-                                    Human hum = managerCollection.parseHuman(element);
-                                    managerCollection.put(key, hum);
-                                }
+                                String key = arg.substring(1, arg.indexOf(' '));
+                                String element = arg.substring(arg.indexOf(' ') + 1);
+                                Human hum = managerCollection.parseHuman(element);
+                                managerCollection.put(key, hum);
                             }
                             break;
                         case "add_if_max":
@@ -55,28 +52,19 @@ public class Console {
                             }
                             break;
                         case "remove_greater_key":
-                            if (!arg.matches("\\{.*\\}")) {
-                                System.err.println("Invalid syntax\nTry to use \"help\" to get more information");
-                            } else {
-                                String key = arg.substring(1, arg.indexOf('}') - 1);
-                                while (managerCollection.getCollection().higherKey(key) != null)
-                                    managerCollection.remove(managerCollection.getCollection().higherKey(key));
-                            }
+                            while (managerCollection.getCollection().higherKey(arg) != null)
+                                managerCollection.remove(managerCollection.getCollection().higherKey(arg));
                             break;
                         case "remove":
-                            if (!arg.matches("\\{.*\\}")) {
-                                System.err.println("Invalid syntax\nTry to use \"help\" to get more information");
-                            } else {
-                                String key = arg.substring(1, arg.indexOf('}') - 1);
-                                managerCollection.remove(key);
-                            }
+                            managerCollection.remove(arg);
                             break;
                         case "import":
-                            if (!arg.matches("\\{.*\\}")) {
-                                System.err.println("Invalid syntax\nTry to use \"help\" to get more information");
-                            } else {
-                                managerCollection.exportfromfile(arg);
-                            }
+                            managerCollection.exportfromfile(arg);
+                            break;
+                        case "show":
+                        case "exit":
+                        case "help":
+                            System.err.println(cmnd + " don't need argument\nTry to use \"help\" to get more information");
                             break;
                         default:
                             System.err.println("Not found " + cmnd + "\nTry to use \"help\" to get more information");
@@ -100,7 +88,7 @@ public class Console {
                     case "remove_greater_key":
                     case "remove":
                     case "import":
-                        System.err.println("Not found argument\nTry to use \"help\" to get more information");
+                        System.err.println(notFoundArgument);
                         break;
                     default:
                         System.err.println("Not found \"" + cmnd + "\"help\nTry to use \"help\" to get more information");

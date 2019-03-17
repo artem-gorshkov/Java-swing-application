@@ -2,7 +2,7 @@ package com.ru.itmo.Gorshkov.first_sem;
 
 import java.util.Objects;
 
-abstract class Property {
+public abstract class Property {
     private String name;
     private Human owner;
     public Property(String name) {

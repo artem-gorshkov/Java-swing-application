@@ -11,7 +11,8 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class Main {
-    private static final String path ="PathLab5";
+    private static final String path = "PathLab5";
+
     public static void main(String args[]) {
         ManagerCollection coll = new ManagerCollection(path);
         coll.exportfromfile(path);
