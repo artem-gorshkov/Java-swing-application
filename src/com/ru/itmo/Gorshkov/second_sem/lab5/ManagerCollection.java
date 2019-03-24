@@ -7,19 +7,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.ru.itmo.Gorshkov.first_sem.Condition;
 import com.ru.itmo.Gorshkov.first_sem.Human;
 import com.ru.itmo.Gorshkov.first_sem.MaterialProperty;
-import com.ru.itmo.Gorshkov.first_sem.Property;
-import com.sun.corba.se.spi.ior.ObjectKey;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
-import java.nio.file.Path;
-import java.security.SecureRandom;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
+import java.nio.file.*;
+import java.util.*;
 
 public class ManagerCollection {
     private TreeMap<String, Human> collection = new TreeMap<>();
@@ -30,11 +24,12 @@ public class ManagerCollection {
     }
 
     public TreeMap<String, Human> getCollection() {
+        updateColl();
         return collection;
     }
 
     public Human put(String key, Human value) {
-        saveToFile();
+        System.out.println("Added " + key + "succesfully");
         return collection.put(key, value);
     }
 
@@ -42,30 +37,34 @@ public class ManagerCollection {
         if (value == null) {
             return null;
         } else {
-            saveToFile();
             return collection.put(value.getName(), value);
         }
     }
 
     public Human remove(String key) {
         Human hum = collection.remove(key);
-        saveToFile();
         return hum;
     }
 
     public void exportfromfile(String path) {
         try (Scanner scan = new Scanner(new File(System.getenv(path)).toPath())) {
-            if (scan.hasNextLine()) scan.nextLine();
+            if (scan.hasNextLine()) {
+                String str = scan.nextLine();
+                if (!str.equals("{\"Humans\" : [")) throw new JSONException();
+            }
             while (scan.hasNextLine()) {
                 String str = scan.nextLine();
-                if (str.charAt(str.length() - 1) == ',')
+                if (str.charAt(str.length() - 1) == ',') {
                     str = str.substring(0, str.length() - 1);
-                if (!str.equals("]}"))
                     this.put(parseHuman(str));
+                } else {
+                    this.put(parseHuman(str.substring(0, str.length() - 2)));
+                    if (!str.substring(str.length() - 2).equals("]}")) throw new JSONException();
+                }
             }
         } catch (IOException e) {
             System.err.println("File not found");
-        } catch (java.lang.StringIndexOutOfBoundsException e) {
+        } catch (java.lang.StringIndexOutOfBoundsException | JSONException e) {
             System.err.println("Invalid JSON Format");
         }
     }
@@ -95,17 +94,35 @@ public class ManagerCollection {
             return null;
         }
     }
+
     public void saveToFile() {
-        try (PrintWriter writer = new PrintWriter(this.path)) {
+        try {
+            Files.delete(Paths.get(System.getenv(path)));
+        } catch (IOException e) {
+            System.err.println("File " + path + " already deleted");
+        }
+        String newpath = System.getenv(path);
+        try (PrintWriter writer = new PrintWriter(newpath)) {
             writer.println("{\"Humans\" : [");
-//            for(collection.)
-//            collection.forEach((String key, Human value) -> {
-//                writer.println(JSON.toJSONString(collection.get(key)) + ",");
-//            });
+            boolean i = true;
+            for (Map.Entry<String, Human> entry : collection.entrySet()) {
+                if (i) {
+                    i = false;
+                } else {
+                    writer.println(",");
+                }
+                writer.print(JSON.toJSONString(entry.getValue()));
+            }
+            writer.print("]}");
         } catch (FileNotFoundException e) {
             System.err.println("Can't save information in file\nFile not found");
         } catch (JSONException e) {
             System.err.println("Can't save Human to file\nInvalid syntax");
         }
+    }
+
+    public void updateColl() {
+        collection.clear();
+        exportfromfile(path);
     }
 }

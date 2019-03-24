@@ -35,14 +35,14 @@ public class Human implements Comparable<Human>{
     }
     public void setCondition (Condition condition) {
         this.condition = condition;
-        System.out.println(this.getName() + " изменил состояние на " + condition.toString());
+        //System.out.println(this.getName() + " изменил состояние на " + condition.toString());
     }
     public Condition getCondition() {
         return condition;
     }
     public void addProperty(Property property) {
         this.allProperty.add(property);
-        System.out.println("У человека " + this.getName() + " появилось новое имущество: " + property.getName());
+        //System.out.println("У человека " + this.getName() + " появилось новое имущество: " + property.getName());
     }
     public Property[] getAllProperty() {
         Property[] propertyArray = new Property[allProperty.size()];
@@ -54,7 +54,7 @@ public class Human implements Comparable<Human>{
 
     public void delProperty(Property property) {
         this.allProperty.remove(property);
-        System.out.println("У человека " + this.getName() + " пропало имущество: " + property.getName());
+        //System.out.println("У человека " + this.getName() + " пропало имущество: " + property.getName());
     }
     public void setCordX(double cordX) {
         this.cordX = cordX;
@@ -65,7 +65,7 @@ public class Human implements Comparable<Human>{
     public void setCords(double cordX, double cordY) {
         this.cordY = cordY;
         this.cordX = cordX;
-        System.out.println(this.getName() + " изменил координаты на " + cordX + " " + cordY);
+        //System.out.println(this.getName() + " изменил координаты на " + cordX + " " + cordY);
     }
     public double getCordX() {
         return cordX;

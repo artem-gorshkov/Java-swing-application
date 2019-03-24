@@ -2,6 +2,7 @@ package com.ru.itmo.Gorshkov.second_sem.lab5;
 
 import com.ru.itmo.Gorshkov.first_sem.Human;
 
+import java.util.Map;
 import java.util.Scanner;
 
 class Console {
@@ -32,8 +33,16 @@ class Console {
                 cmnd = callcmnd.substring(0, callcmnd.indexOf(' '));
                 arg = callcmnd.substring(callcmnd.indexOf(' ') + 1);
                 if (arg.length() == 0) {
-                    System.err.println(notFoundArgument);
+                    switch (cmnd) {
+                        case "show":
+                        case "exit":
+                        case "help":
+                            System.err.println(cmnd + " don't need argument\nTry to use \"help\" to get more information");
+                            break;
+                        default: System.err.println(notFoundArgument);
+                    }
                 } else {
+                    managerCollection.updateColl();
                     switch (cmnd) {
                         case "insert":
                             if (!arg.matches("\\w*\\s\\{[\\s\\S]*\\}")) {
@@ -42,33 +51,34 @@ class Console {
                                 String key = arg.substring(1, arg.indexOf(' '));
                                 String element = arg.substring(arg.indexOf(' ') + 1);
                                 Human hum = managerCollection.parseHuman(element);
-                                managerCollection.put(key, hum);
                             }
                             break;
                         case "add_if_max":
                             Human hum = managerCollection.parseHuman(arg);
-                            if (hum.getName().compareTo(managerCollection.getCollection().lastKey()) > 0) {
+                            if (!(hum == null) && hum.getName().compareTo(managerCollection.getCollection().lastKey()) > 0) {
                                 managerCollection.put(hum);
-                            }
+                            } else System.out.println("Not bigger then max");
                             break;
                         case "remove_greater_key":
-                            while (managerCollection.getCollection().higherKey(arg) != null)
+                            boolean a = true;
+                            for (Map.Entry<String, Human> entry : managerCollection.getCollection().entrySet()) {
+                                if (entry.getKey().equals(arg)) a = false;
+                            }
+                            if (!a) managerCollection.remove(arg);
+                            while (managerCollection.getCollection().higherKey(arg) != null && a)
                                 managerCollection.remove(managerCollection.getCollection().higherKey(arg));
                             break;
                         case "remove":
-                            managerCollection.remove(arg);
+                            if (managerCollection.remove(arg) == null) System.out.println("No such key");
+                            else System.out.println("Remove " + arg + " succesfully");
                             break;
                         case "import":
                             managerCollection.exportfromfile(arg);
                             break;
-                        case "show":
-                        case "exit":
-                        case "help":
-                            System.err.println(cmnd + " don't need argument\nTry to use \"help\" to get more information");
-                            break;
                         default:
                             System.err.println("Not found " + cmnd + "\nTry to use \"help\" to get more information");
                     }
+                    managerCollection.saveToFile();
                 }
             } else {
                 cmnd = callcmnd;
@@ -91,7 +101,8 @@ class Console {
                         System.err.println(notFoundArgument);
                         break;
                     default:
-                        System.err.println("Not found \"" + cmnd + "\"help\nTry to use \"help\" to get more information");
+                        if (!cmnd.equals(""))
+                            System.err.println("Not found \"" + cmnd + "\"\nTry to use \"help\" to get more information");
                 }
             }
         }
