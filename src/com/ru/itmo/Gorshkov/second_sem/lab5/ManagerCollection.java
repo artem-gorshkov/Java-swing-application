@@ -58,12 +58,18 @@ public class ManagerCollection {
                     str = str.substring(0, str.length() - 1);
                     this.put(parseHuman(str));
                 } else {
-                    this.put(parseHuman(str.substring(0, str.length() - 2)));
-                    if (!str.substring(str.length() - 2).equals("]}")) throw new JSONException();
+                    if(!str.equals("]}")) {
+                        this.put(parseHuman(str.substring(0, str.length() - 2)));
+                    }
+                        if (!str.substring(str.length() - 2).equals("]}")) throw new JSONException();
                 }
             }
         } catch (IOException e) {
             System.err.println("File not found");
+            if (System.getenv(this.path).equals(System.getenv(path))) {
+                saveToFile();
+                System.out.println("Created file to save collection: " + System.getenv(this.path));
+            }
         } catch (java.lang.StringIndexOutOfBoundsException | JSONException e) {
             System.err.println("Invalid JSON Format");
         }
@@ -71,24 +77,24 @@ public class ManagerCollection {
 
     public Human parseHuman(String str) {
         try {
-            JSONObject jsonObject = (JSONObject) JSON.parse(str);
-            Object name = jsonObject.get("name");
-            Human human = new Human((String) name);
-            try {
-                Object cordX = jsonObject.get("cordX");
-                Object cordY = jsonObject.get("cordY");
-                human.setCords(Double.parseDouble(cordX.toString()), Double.parseDouble(cordY.toString()));
-            } catch (java.lang.ClassCastException e) {
-                System.err.println("cords must be digital");
-            }
-            Object condition = jsonObject.get("condition");
-            human.setCondition(Condition.valueOf((String) condition));
-            Object allProperty = jsonObject.get("allProperty");
-            for (Object property : (JSONArray) allProperty) {
-                Object propertyName = ((JSONObject) property).get("name");
-                human.addProperty(new MaterialProperty((String) propertyName));
-            }
-            return human;
+                JSONObject jsonObject = (JSONObject) JSON.parse(str);
+                Object name = jsonObject.get("name");
+                Human human = new Human((String) name);
+                try {
+                    Object cordX = jsonObject.get("cordX");
+                    Object cordY = jsonObject.get("cordY");
+                    human.setCords(Double.parseDouble(cordX.toString()), Double.parseDouble(cordY.toString()));
+                } catch (java.lang.ClassCastException e) {
+                    System.err.println("cords must be digital");
+                }
+                Object condition = jsonObject.get("condition");
+                human.setCondition(Condition.valueOf((String) condition));
+                Object allProperty = jsonObject.get("allProperty");
+                for (Object property : (JSONArray) allProperty) {
+                    Object propertyName = ((JSONObject) property).get("name");
+                    human.addProperty(new MaterialProperty((String) propertyName));
+                }
+                return human;
         } catch (JSONException e) {
             System.err.println("Can't parse Human\nInvalid syntax\nTry to use \"help\" for more information");
             return null;
@@ -96,11 +102,6 @@ public class ManagerCollection {
     }
 
     public void saveToFile() {
-//        try {
-//            Files.delete(Paths.get(System.getenv(path)));
-//        } catch (IOException e) {
-//            System.err.println("File " + path + " already deleted");
-//        }
         String newpath = System.getenv(path);
         try (PrintWriter writer = new PrintWriter(newpath)) {
             writer.println("{\"Humans\" : [");

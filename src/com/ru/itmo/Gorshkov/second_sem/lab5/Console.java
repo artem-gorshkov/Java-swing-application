@@ -1,8 +1,10 @@
 package com.ru.itmo.Gorshkov.second_sem.lab5;
 
+import com.alibaba.fastjson.JSONException;
 import com.ru.itmo.Gorshkov.first_sem.Human;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -117,9 +119,10 @@ class Console {
         if (!arg.matches("\\w*\\s\\{[\\s\\S]*\\}")) {
             System.err.println(invalidSyntax);
         } else {
-            String key = arg.substring(1, arg.indexOf(' '));
+            String key = arg.substring(0, arg.indexOf(' '));
             String element = arg.substring(arg.indexOf(' ') + 1);
             Human hum = managerCollection.put(managerCollection.parseHuman(element));
+            System.out.println("Added " + key + " successfully");
         }
     }
 
@@ -165,7 +168,28 @@ class Console {
      * @param arg must be {String path}
      */
     private void Import(String arg) {
-        managerCollection.exportfromfile(arg);
+        try (Scanner scan = new Scanner(Paths.get(arg))) {
+            if (scan.hasNextLine()) {
+                String str = scan.nextLine();
+                if (!str.equals("{\"Humans\" : [")) throw new JSONException();
+            }
+            while (scan.hasNextLine()) {
+                String str = scan.nextLine();
+                if (str.charAt(str.length() - 1) == ',') {
+                    str = str.substring(0, str.length() - 1);
+                    managerCollection.put(managerCollection.parseHuman(str));
+                } else {
+                    if(!str.equals("]}")) {
+                        managerCollection.put(managerCollection.parseHuman(str.substring(0, str.length() - 2)));
+                    }
+                    if (!str.substring(str.length() - 2).equals("]}")) throw new JSONException();
+                }
+            }
+        } catch (java.lang.StringIndexOutOfBoundsException | JSONException e) {
+            System.err.println("Invalid JSON Format");
+        } catch (IOException e) {
+            System.err.println("File not found");
+        }
     }
 
     /**
@@ -186,15 +210,8 @@ class Console {
      * Show info about type of collection, number of collection elements, time from star program, time of file creation.
      */
     private void info() {
-        Object creation_time;
-        try {
-            creation_time = Files.getAttribute(Paths.get(System.getenv(Main.getPath())), "creationTime");
-        } catch (IOException e) {
-            System.err.println("File not found");
-            creation_time = "can't find file";
-        }
         System.out.println("Type: " + managerCollection.getCollection().getClass().getSimpleName() + ", Number of element: "
-                + managerCollection.getCollection().size() + ", Since start prog: " + (System.currentTimeMillis() - Main.getTimeOfStartProg()) / 1000 + " second, File creation time: " + creation_time);
+                + managerCollection.getCollection().size() + ", Since start prog: " + (System.currentTimeMillis() - Main.getTimeOfStartProg()) / 1000);
     }
 
     /**
