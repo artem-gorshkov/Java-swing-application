@@ -96,11 +96,11 @@ public class ManagerCollection {
     }
 
     public void saveToFile() {
-        try {
-            Files.delete(Paths.get(System.getenv(path)));
-        } catch (IOException e) {
-            System.err.println("File " + path + " already deleted");
-        }
+//        try {
+//            Files.delete(Paths.get(System.getenv(path)));
+//        } catch (IOException e) {
+//            System.err.println("File " + path + " already deleted");
+//        }
         String newpath = System.getenv(path);
         try (PrintWriter writer = new PrintWriter(newpath)) {
             writer.println("{\"Humans\" : [");

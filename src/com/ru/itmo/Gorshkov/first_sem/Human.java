@@ -19,7 +19,7 @@ public class Human implements Comparable<Human>{
         allProperty = new ArrayList<Property>();
         allProperty.ensureCapacity(5);
         this.sit = false;
-        System.out.println("Создан человек " + this.getName());
+        //System.out.println("Создан человек " + this.getName());
     }
     public String getName() {
         return name;
