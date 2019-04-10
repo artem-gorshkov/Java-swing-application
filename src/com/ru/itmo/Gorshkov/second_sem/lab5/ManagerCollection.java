@@ -29,7 +29,9 @@ public class ManagerCollection {
     }
 
     public Human put(String key, Human value) {
-        System.out.println("Added " + key + "succesfully");
+        if(!key.equals(value.getName())) {
+            value.setName(key);
+        }
         return collection.put(key, value);
     }
 
@@ -77,6 +79,28 @@ public class ManagerCollection {
 
     public Human parseHuman(String str) {
         try {
+            Human human = helpParse(str);
+            JSONObject jsonObject = (JSONObject) JSON.parse(str);
+            Object allProperty = jsonObject.get("allProperty");
+            for (Object property : (JSONArray) allProperty) {
+                Object propertyName = ((JSONObject) property).get("name");
+                Object propertyOwner = ((JSONObject) property).get("owner");
+                if (!(propertyOwner == null)) {
+                    Human propertyhuman = helpParse(propertyOwner.toString());
+                    human.addProperty(new MaterialProperty((String) propertyName, propertyhuman));
+                } else {
+                    human.addProperty(new MaterialProperty((String) propertyName));
+                }
+            }
+            return human;
+        } catch (JSONException | NullPointerException e) {
+            System.err.println("Can't parse Human\nInvalid syntax\nTry to use \"help\" for more information");
+            return null;
+        }
+    }
+
+    public Human helpParse(String str) {
+        try {
             JSONObject jsonObject = (JSONObject) JSON.parse(str);
             Object name = jsonObject.get("name");
             Human human = new Human((String) name);
@@ -89,11 +113,6 @@ public class ManagerCollection {
             }
             Object condition = jsonObject.get("condition");
             human.setCondition(Condition.valueOf((String) condition));
-            Object allProperty = jsonObject.get("allProperty");
-            for (Object property : (JSONArray) allProperty) {
-                Object propertyName = ((JSONObject) property).get("name");
-                human.addProperty(new MaterialProperty((String) propertyName));
-            }
             return human;
         } catch (JSONException e) {
             System.err.println("Can't parse Human\nInvalid syntax\nTry to use \"help\" for more information");
@@ -117,7 +136,7 @@ public class ManagerCollection {
             writer.print("]}");
         } catch (FileNotFoundException e) {
             System.err.println("Can't save information in file\nFile not found");
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             System.err.println("Can't save Human to file\nInvalid syntax");
         }
     }

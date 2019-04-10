@@ -3,10 +3,9 @@ package com.ru.itmo.Gorshkov.second_sem.lab5;
 import com.alibaba.fastjson.JSONException;
 import com.ru.itmo.Gorshkov.first_sem.Human;
 
-import javax.swing.*;
-import java.io.File;
+
 import java.io.IOException;
-import java.nio.file.Files;
+
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
@@ -121,7 +120,7 @@ class Console {
         } else {
             String key = arg.substring(0, arg.indexOf(' '));
             String element = arg.substring(arg.indexOf(' ') + 1);
-            Human hum = managerCollection.put(managerCollection.parseHuman(element));
+            Human hum = managerCollection.put(key, managerCollection.parseHuman(element));
             System.out.println("Added " + key + " successfully");
         }
     }
@@ -133,7 +132,7 @@ class Console {
      */
     private void add_if_max(String arg) {
         Human hum = managerCollection.parseHuman(arg);
-        if (!(hum == null) && hum.getName().compareTo(managerCollection.getCollection().lastKey()) > 0) {
+        if (!(hum == null) && hum.getName().compareTo(managerCollection.getCollection().lastKey()) < 0) {
             managerCollection.put(hum);
         } else System.out.println("Not bigger then max");
     }

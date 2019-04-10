@@ -1,3 +1,4 @@
 {"Humans" : [
 {"allProperty":[{"name":"Car"}],"condition":"CALM","cordX":0.0,"cordY":6.0,"name":"Baby"},
-{"allProperty":[{"name":"Car"}],"condition":"CALM","cordX":0.0,"cordY":6.0,"name":"Dad"}]}
+{"allProperty":[{"name":"Car"}],"condition":"CALM","cordX":0.0,"cordY":1000.0,"name":"Dad"},
+{"allProperty":[{"name":"Car"}],"condition":"CALM","cordX":0.0,"cordY":1000.0,"name":"bzby"}]}
