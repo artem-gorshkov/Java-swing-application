@@ -1,17 +1,18 @@
-package com.ru.itmo.Gorshkov.second_sem.lab5;
+package com.ru.itmo.Gorshkov.second_sem;
 
 import com.alibaba.fastjson.JSONException;
 import com.ru.itmo.Gorshkov.first_sem.Human;
 
 
-import java.io.IOException;
+import java.io.*;
 
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
 
 class Console {
-    private Scanner scan = new Scanner(System.in);
+    private OutputStream outStream;
+    private InputStream inStream;
     private boolean run = false;
     private ManagerCollection managerCollection;
     private static final String help = "Usage:" +
@@ -26,8 +27,10 @@ class Console {
     private static final String invalidSyntax = "Invalid syntax\nTry to use \"help\" to get more information";
     private static final String notFoundArgument = "Not found argument\nTry to use \"help\" to get more information";
 
-    Console(ManagerCollection managerCollection) {
+    Console(ManagerCollection managerCollection, OutputStream outStream, InputStream inStream) {
         this.managerCollection = managerCollection;
+        this.inStream = inStream;
+        this.outStream = outStream;
     }
 
     void exec() {
@@ -36,6 +39,9 @@ class Console {
         }
         run = true;
         while (run) {
+            Scanner scan = new Scanner(inStream, "UTF-8");
+            PrintWriter printer= new PrintWriter(outStream, true);
+            printer.println("Hello, Lab6, press \"help\" for more information");
             if (!scan.hasNextLine()) {
                 break;
             }
@@ -51,10 +57,10 @@ class Console {
                         case "exit":
                         case "help":
                         case "info":
-                            System.err.println(cmnd + " don't need argument\nTry to use \"help\" to get more information");
+                            printer.println(cmnd + " don't need argument\nTry to use \"help\" to get more information");
                             break;
                         default:
-                            System.err.println(notFoundArgument);
+                            printer.println(notFoundArgument);
                     }
                 } else {
                     managerCollection.updateColl();
@@ -75,7 +81,7 @@ class Console {
                             Import(arg);
                             break;
                         default:
-                            System.err.println("Not found " + cmnd + "\nTry to use \"help\" to get more information");
+                            printer.println("Not found " + cmnd + "\nTry to use \"help\" to get more information");
                     }
                     managerCollection.saveToFile();
                 }
@@ -99,11 +105,11 @@ class Console {
                     case "remove_greater_key":
                     case "remove":
                     case "import":
-                        System.err.println(notFoundArgument);
+                        printer.println(notFoundArgument);
                         break;
                     default:
                         if (!cmnd.equals(""))
-                            System.err.println("Not found \"" + cmnd + "\"\nTry to use \"help\" to get more information");
+                            printer.println("Not found \"" + cmnd + "\"\nTry to use \"help\" to get more information");
                 }
             }
         }
@@ -210,7 +216,7 @@ class Console {
      */
     private void info() {
         System.out.println("Type: " + managerCollection.getCollection().getClass().getSimpleName() + ", Number of element: "
-                + managerCollection.getCollection().size() + ", Since start prog: " + (System.currentTimeMillis() - Main.getTimeOfStartProg()) / 1000);
+                + managerCollection.getCollection().size());
     }
 
     /**

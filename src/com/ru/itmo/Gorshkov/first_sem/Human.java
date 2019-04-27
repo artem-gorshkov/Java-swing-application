@@ -2,10 +2,11 @@ package com.ru.itmo.Gorshkov.first_sem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Objects;
 
 
-public class Human implements Comparable<Human>{
+public class Human implements Comparable<Human> {
     private String name;
     private Condition condition;
     private byte countCondition = 0;
@@ -13,6 +14,16 @@ public class Human implements Comparable<Human>{
     private double cordX;
     private double cordY;
     private boolean sit;
+    private Date birthday;
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
     public Human(String name) {
         this.name = name;
         condition = Condition.CALM;
@@ -21,6 +32,7 @@ public class Human implements Comparable<Human>{
         this.sit = false;
         //System.out.println("Создан человек " + this.getName());
     }
+
     public String getName() {
         return name;
     }
@@ -33,20 +45,24 @@ public class Human implements Comparable<Human>{
     public void setName(String name) {
         this.name = name;
     }
-    public void setCondition (Condition condition) {
+
+    public void setCondition(Condition condition) {
         this.condition = condition;
         //System.out.println(this.getName() + " изменил состояние на " + condition.toString());
     }
+
     public Condition getCondition() {
         return condition;
     }
+
     public void addProperty(Property property) {
         this.allProperty.add(property);
         //System.out.println("У человека " + this.getName() + " появилось новое имущество: " + property.getName());
     }
+
     public Property[] getAllProperty() {
         Property[] propertyArray = new Property[allProperty.size()];
-        for (int i = 0;i < allProperty.size(); i++) {
+        for (int i = 0; i < allProperty.size(); i++) {
             propertyArray[i] = allProperty.get(i);
         }
         return propertyArray;
@@ -56,23 +72,29 @@ public class Human implements Comparable<Human>{
         this.allProperty.remove(property);
         //System.out.println("У человека " + this.getName() + " пропало имущество: " + property.getName());
     }
+
     public void setCordX(double cordX) {
         this.cordX = cordX;
     }
+
     public void setCordY(double cordY) {
         this.cordY = cordY;
     }
+
     public void setCords(double cordX, double cordY) {
         this.cordY = cordY;
         this.cordX = cordX;
         //System.out.println(this.getName() + " изменил координаты на " + cordX + " " + cordY);
     }
+
     public double getCordX() {
         return cordX;
     }
+
     public double getCordY() {
         return cordY;
     }
+
     public void upCountCondition() {
         this.countCondition++;
         if (countCondition > 1) {
@@ -105,49 +127,58 @@ public class Human implements Comparable<Human>{
             }
         }
     }
-    public boolean equals(Object otherObject)  {
+
+    public boolean equals(Object otherObject) {
         if (this == otherObject) return true;
         if (otherObject == null) return false;
         if (getClass() != otherObject.getClass()) return false;
         Human other = (Human) otherObject;
-        return this.getName().equals(other.getName()) && this.getCondition().equals(other.getCondition()) && this.getCordY() == other.getCordY() && this.getCordX() == other.getCordX()&& Arrays.equals(this.getAllProperty(), other.getAllProperty());
+        return this.getName().equals(other.getName()) && this.getCondition().equals(other.getCondition()) &&
+                this.getCordY() == other.getCordY() && this.getCordX() == other.getCordX() &&
+                Arrays.equals(this.getAllProperty(), other.getAllProperty()) && this.getBirthday().equals(other.getBirthday());
     }
-    public int hashCode()
-    {
-        return Objects.hash(name, condition, allProperty, cordX, cordY, countCondition);
+
+    public int hashCode() {
+        return Objects.hash(name, condition, allProperty, cordX, cordY, countCondition, birthday);
     }
-    public String toString()
-    {
+
+    public String toString() {
         String str = "[";
-        for (int i = 0;i < allProperty.size(); i++) {
+        for (int i = 0; i < allProperty.size(); i++) {
             str = str + allProperty.get(i).toString() + ",";
         }
         str = str + "]";
-        return getClass().getSimpleName() + "[name=" + this.getName() + ",condition=" + this.getCondition().toString() + ",allProperty=" + str + ", CordX=" + this.getCordX() + ", CordY=" + this.getCordY() + "]";
+        return getClass().getSimpleName() + "[name=" + this.getName() + ", condition=" + this.getCondition().toString() +
+                ", allProperty=" + str + ", CordX=" + this.getCordX() + ", CordY=" + this.getCordY() +
+                ", Birthday=" + this.getBirthday() + "]";
     }
+
     public TypeOfTree lookAt(Tree tree, MakeLaugh makeLaugh) throws TooFarToTreeExeption {
-        if(tree instanceof LittleTree) {
-            if(sit) {
+        if (tree instanceof LittleTree) {
+            if (sit) {
                 makeLaugh.makeLaugh();
                 return tree.getType();
-            }
-            else throw new TooFarToTreeExeption();
-        }
-        else {
+            } else throw new TooFarToTreeExeption();
+        } else {
             return tree.getType();
         }
     }
+
     public class Legs {
-        public Legs() {}
+        public Legs() {
+        }
+
         public void walk(Grass grass, CanSoftly softly) {
             if (softly.canSoftly()) {
                 System.out.println(" идет по мягкой траве с цветочками");
-                condition=Condition.AMAZED;
+                condition = Condition.AMAZED;
             }
         }
+
         public void sit() {
             sit = true;
         }
+
         public void standUp() {
             sit = false;
         }

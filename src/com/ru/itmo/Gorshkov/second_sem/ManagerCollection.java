@@ -1,4 +1,4 @@
-package com.ru.itmo.Gorshkov.second_sem.lab5;
+package com.ru.itmo.Gorshkov.second_sem;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -14,16 +14,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class ManagerCollection {
-    private TreeMap<String, Human> collection = new TreeMap<>();
+    private ConcurrentSkipListMap<String, Human> collection = new ConcurrentSkipListMap<>();
     private String path;
 
     ManagerCollection(String path) {
         this.path = path;
     }
 
-    public TreeMap<String, Human> getCollection() {
+    public ConcurrentSkipListMap<String, Human> getCollection() {
         updateColl();
         return collection;
     }
@@ -113,6 +114,9 @@ public class ManagerCollection {
             }
             Object condition = jsonObject.get("condition");
             human.setCondition(Condition.valueOf((String) condition));
+            Object birhday = jsonObject.get("birthday");
+            if(birhday != null)  human.setBirthday(new Date(Long.valueOf(birhday.toString())));
+            else human.setBirthday(new Date());
             return human;
         } catch (JSONException e) {
             System.err.println("Can't parse Human\nInvalid syntax\nTry to use \"help\" for more information");
