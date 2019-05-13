@@ -1,12 +1,13 @@
 package com.ru.itmo.Gorshkov.first_sem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
 
-public class Human implements Comparable<Human> {
+public class Human implements Comparable<Human>, Serializable {
     private String name;
     private Condition condition;
     private byte countCondition = 0;

@@ -1,8 +1,9 @@
 package com.ru.itmo.Gorshkov.first_sem;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Property {
+public abstract class Property implements Serializable {
     private String name;
     private Human owner;
     public Property(String name) {

@@ -1,3 +1,5 @@
 package com.ru.itmo.Gorshkov.first_sem;
 
-public enum Condition { CALM, ALARM, GIVEUP, CRY, SCARED, VERYSCARED, VERYVERYSCARED, AMAZED, LAUGHS }
+import java.io.Serializable;
+
+public enum Condition implements Serializable { CALM, ALARM, GIVEUP, CRY, SCARED, VERYSCARED, VERYVERYSCARED, AMAZED, LAUGHS }

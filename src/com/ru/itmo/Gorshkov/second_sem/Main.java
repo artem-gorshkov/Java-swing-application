@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.net.*;
+import java.util.Scanner;
 
 
 public class Main {
@@ -16,7 +17,7 @@ public class Main {
         try {
             Path path1 = Paths.get(System.getenv(path));
         } catch (Throwable e) {
-            //System.err.println("Can't find environment variable\nPlease write way to file in \"PathLab5\"");
+            System.err.println("Can't find environment variable\nPlease write way to file in \"PathLab5\"");
             System.exit(3);
         }
         //Create new collection handler
@@ -32,7 +33,16 @@ public class Main {
             }
         }));
         //create server socket, start waiting for connection
-        try (ServerSocket s = new ServerSocket(8189)) {
+        int port = 8189;
+//        try {
+//            port = Integer.parseInt(args[0]);
+//        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+//            System.err.println("Port must be number");
+//            Scanner scan = new Scanner(System.in);
+//            if (scan.hasNextInt()) port = scan.nextInt();
+//            else port = 8189;
+//        }
+        try (ServerSocket s = new ServerSocket(port)) {
             while (true) {
                 Socket incoming = s.accept();
                 System.out.println("One more user in");
@@ -41,7 +51,7 @@ public class Main {
                 t.start();
             }
         } catch (IOException e) {
-            System.out.println("Broken(((((((((((");
+            System.err.println("Broken");
         }
     }
 }
