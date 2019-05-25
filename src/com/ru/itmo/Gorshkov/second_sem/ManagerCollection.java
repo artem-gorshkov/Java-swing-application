@@ -25,7 +25,6 @@ public class ManagerCollection {
     }
 
     public ConcurrentSkipListMap<String, Human> getCollection() {
-        updateColl();
         return collection;
     }
 
@@ -148,5 +147,10 @@ public class ManagerCollection {
     public void updateColl() {
         collection.clear();
         exportfromfile(path);
+    }
+    public void outCollection() {
+        this.getCollection().forEach((s, human) -> {
+            System.out.println(s + " = " + human.toString());
+        });
     }
 }

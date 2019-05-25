@@ -165,23 +165,4 @@ public class Human implements Comparable<Human>, Serializable {
         }
     }
 
-    public class Legs {
-        public Legs() {
-        }
-
-        public void walk(Grass grass, CanSoftly softly) {
-            if (softly.canSoftly()) {
-                System.out.println(" идет по мягкой траве с цветочками");
-                condition = Condition.AMAZED;
-            }
-        }
-
-        public void sit() {
-            sit = true;
-        }
-
-        public void standUp() {
-            sit = false;
-        }
-    }
 }

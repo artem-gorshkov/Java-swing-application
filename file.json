@@ -1,3 +1,6 @@
 {"Humans" : [
-{"allProperty":[{"name":"Car"}],"birthday":155635760114,"condition":"CALM","cordX":0.0,"cordY":6.0,"name":"Baby"},
+{"allProperty":[{"name":"House"}],"birthday":155635760114,"condition":"CALM","cordX":0.0,"cordY":6.0,"name":"AA"},
+{"allProperty":[{"name":"Car"}],"birthday":155634760912,"condition":"CALM","cordX":0.0,"cordY":1000.0,"name":"Arnold"},
+{"allProperty":[{"name":"Car"}],"birthday":155634760912,"condition":"CALM","cordX":0.0,"cordY":1000.0,"name":"Arny"},
+{"allProperty":[{"name":"House"}],"birthday":155635760114,"condition":"CALM","cordX":0.0,"cordY":6.0,"name":"Baby"},
 {"allProperty":[{"name":"Car"}],"birthday":155634760912,"condition":"CALM","cordX":0.0,"cordY":1000.0,"name":"Dad"}]}
