@@ -10,12 +10,10 @@ import java.util.Scanner;
 
 public class Main {
     public static final String path = "PathLab6";
-    private static long timeOfStartProg;
     private static Integer port;
     static private Scanner scan = new Scanner(System.in);
 
     public static void main(String args[]) {
-        //Check environment variable
         try {
             Paths.get(System.getenv(path));
         } catch (Throwable e) {
@@ -26,9 +24,8 @@ public class Main {
         try {
             coll.exportfromfile(System.getenv(path));
         } catch (Throwable e) {
-            e.printStackTrace();
+            System.err.println("Can't parse collection");
         }
-        timeOfStartProg = System.currentTimeMillis();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 coll.saveToFile();

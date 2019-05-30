@@ -121,15 +121,15 @@ public class ManagerCollection {
         }
     }
 
-    public void saveToFile(String path) {
+    public void saveToFile(String path) throws Exception {
         helpSave(path);
     }
 
-    public void saveToFile() {
+    public void saveToFile() throws Exception {
         String newpath = System.getenv(path);
         helpSave(newpath);
     }
-    private void helpSave(String newpath) {
+    private void helpSave(String newpath) throws Exception {
         try (PrintWriter writer = new PrintWriter(newpath)) {
             writer.println("{\"Humans\" : [");
             boolean i = true;
@@ -144,8 +144,10 @@ public class ManagerCollection {
             writer.print("]}");
         } catch (FileNotFoundException e) {
             System.err.println("Can't save information in file\nFile not found");
+            throw e;
         } catch (JSONException | NullPointerException e) {
             System.err.println("Can't save Human to file\nInvalid syntax");
+            throw e;
         }
     }
     public void outCollection() {

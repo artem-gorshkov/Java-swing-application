@@ -1,22 +1,15 @@
 package com.ru.itmo.Gorshkov.second_sem;
 
-import com.alibaba.fastjson.JSONException;
-import com.ru.itmo.Gorshkov.first_sem.Human;
-import com.sun.org.apache.xml.internal.utils.ThreadControllerWrapper;
 
+import com.ru.itmo.Gorshkov.first_sem.Human;
 
 import java.io.*;
-
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Handle one connection with one user
- */
 
 public class Connection implements Runnable {
     private DatagramSocket socket;
@@ -25,9 +18,6 @@ public class Connection implements Runnable {
     private byte[] commandByte;
     private DatagramPacket answerPacket;
 
-    /**
-     * Construct new handler
-     */
     Connection(DatagramSocket socket, DatagramPacket packet, ManagerCollection managerCollection) {
         this.socket = socket;
         this.recievePacket = packet;
@@ -42,10 +32,12 @@ public class Connection implements Runnable {
             Command command = (Command) objectInputStream.readObject();
             ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
+            String feedback;
             switch (command.getCommands().getText()) {
                 case "request":
                     answerPacket = new DatagramPacket(arrayOutputStream.toByteArray(), arrayOutputStream.toByteArray().length, recievePacket.getAddress(), recievePacket.getPort());
                     socket.send(answerPacket);
+                    break;
                 case "exit":
                     try {
                         managerCollection.saveToFile();
@@ -67,40 +59,38 @@ public class Connection implements Runnable {
                     ConcurrentSkipListMap<String, Human> incoll =
                             ((ConcurrentSkipListMap<String, Human>) objectInputStream.readObject());
                     incoll.forEach((s, h) -> managerCollection.getCollection().put(s, h));
-                case "load":
-                    load(command.getArg());
-                case "save":
-                    save(command.getArg());
                 default:
-                    doCommand(command);
-                    managerCollection.outCollection();
-                    if(!managerCollection.getCollection().isEmpty())
-                        objectOutputStream.writeObject(managerCollection.getCollection());
-                     else objectOutputStream.writeObject("No elements in collection");
+                    feedback = doCommand(command);
+                    //managerCollection.outCollection();
+                    if (managerCollection.getCollection().isEmpty())
+                        feedback = "No elements in collection";
+                    if (feedback != null)
+                        objectOutputStream.writeObject(feedback);
+                    objectOutputStream.writeObject(managerCollection.getCollection());
                     answerPacket = new DatagramPacket(arrayOutputStream.toByteArray(), arrayOutputStream.toByteArray().length, recievePacket.getAddress(), recievePacket.getPort());
                     socket.send(answerPacket);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException ee) {
-            ee.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Error");
         }
     }
 
-    private void doCommand(Command command) {
+    private String doCommand(Command command) {
         switch (command.getCommands().getText()) {
+            case "add_if_max":
+                return add_if_max(command.getArg());
+            case "remove":
+                return remove(command.getArg());
+            case "load":
+                return load(command.getArg());
+            case "save":
+                return save(command.getArg());
             case "insert":
                 insert(command.getArg());
-                break;
-            case "add_if_max":
-                add_if_max(command.getArg());
-                break;
             case "remove_greater_key":
                 remove_greater_key(command.getArg());
-                break;
-            case "remove":
-                remove(command.getArg());
-                break;
+            default:
+                return null;
         }
     }
 
@@ -116,7 +106,6 @@ public class Connection implements Runnable {
             Human hum = managerCollection.parseHuman(element);
             if (!key.equals(hum.getName())) hum.setName(key);
             System.out.println(hum);
-            //Human hum = managerCollection.put(key, managerCollection.parseHuman(element));
             TreeMap<String, Human> one = new TreeMap<>();
             one.put(key, hum);
             Set<Human> set = Stream.concat(one.values().stream(), managerCollection.getCollection().values().stream()).collect(Collectors.toSet());
@@ -133,18 +122,21 @@ public class Connection implements Runnable {
      *
      * @param arg must be: {element} (element in JSON format)
      */
-    private void add_if_max(String arg) {
+    private String add_if_max(String arg) {
         try {
             Human hum = managerCollection.parseHuman(arg);
             TreeMap<String, Human> one = new TreeMap<>();
             one.put(hum.getName(), hum);
-            if (Stream.concat(one.keySet().stream(), managerCollection.getCollection().keySet().stream()).max(String::compareTo).equals(hum.getName()) && !(hum == null)) {
+            //System.out.println(hum.hashCode());
+            //System.out.println(managerCollection.getCollection().values().stream().sorted(Comparator.reverseOrder()).findFirst().get().hashCode());
+            if (managerCollection.getCollection().values().stream().sorted(Comparator.reverseOrder()).findFirst().get().compareTo(hum) < 0 && !(hum == null)) {
                 Set<Human> set = Stream.concat(one.values().stream(), managerCollection.getCollection().values().stream()).collect(Collectors.toSet());
                 managerCollection.getCollection().clear();
                 set.forEach(managerCollection::put);
-            } //else System.out.println("Not bigger then max"); //OUT TO CLIENT
-        } catch(Throwable e) {
-
+                return null;
+            } else return "not max";
+        } catch (Throwable e) {
+            return null;
         }
     }
 
@@ -154,7 +146,9 @@ public class Connection implements Runnable {
      * @param arg must be: {String key}
      */
     private void remove_greater_key(String arg) {
+        System.out.println(managerCollection.getCollection().keySet());
         Set<String> newSet = managerCollection.getCollection().keySet().stream().filter(s -> s.compareTo(arg) < 0).collect(Collectors.toSet());
+        System.out.println(newSet);
         for (Map.Entry<String, Human> entry : managerCollection.getCollection().entrySet()) {
             if (newSet.contains(entry.getKey())) {
                 managerCollection.getCollection().remove(entry.getKey());
@@ -167,25 +161,44 @@ public class Connection implements Runnable {
      *
      * @param arg must be: {String key}
      */
-    private void remove(String arg) {
+    private String remove(String arg) {
         try {
             String key = managerCollection.getCollection().keySet().stream().filter(k -> k.equals(arg)).findFirst().get();
             managerCollection.getCollection().remove(key);
-            //System.out.println("Remove " + arg + " succesfully");
+            String str = "Remove " + arg + " succesfully";
+            return str;
         } catch (NoSuchElementException e) {
-            //System.out.println("No such key");
+            return "No such key";
         }
     }
 
-    private void load(String arg) {
+    /**
+     * Load Human form file
+     *
+     * @param arg - path to file
+     * @return information for client
+     */
+    private String load(String arg) {
         try {
             managerCollection.exportfromfile(arg);
+            return ("load from file succesfully");
         } catch (IOException e) {
-            System.err.println("File not found");
+            return ("File not found");
         }
     }
 
-    private void save(String arg) {
-        managerCollection.saveToFile(arg);
+    /**
+     * Save collection to file
+     *
+     * @param arg- path to file
+     * @return information for client
+     */
+    private String save(String arg) {
+        try {
+            managerCollection.saveToFile(arg);
+            return ("File saved succesfully");
+        } catch (Exception e) {
+            return ("File not found");
+        }
     }
 }

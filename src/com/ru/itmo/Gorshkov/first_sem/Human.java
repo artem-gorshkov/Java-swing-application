@@ -40,7 +40,9 @@ public class Human implements Comparable<Human>, Serializable {
 
     @Override
     public int compareTo(Human human) {
-        return this.getName().compareTo(human.getName());
+        return  Integer.compare(Objects.hash(name, condition, allProperty, cordX, cordY, birthday),
+                Objects.hash(human.getName(), human.getCondition(), human.getAllProperty(),
+                        human.getCordX(), human.getCordY(), human.getBirthday()));
     }
 
     public void setName(String name) {
