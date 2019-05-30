@@ -41,7 +41,7 @@ public class Main {
             enterPort();
         }
         try {
-            byte b[] = new byte[Integer.MAX_VALUE/4];
+            byte b[] = new byte[Integer.MAX_VALUE/32];
             DatagramSocket socket = new DatagramSocket(port);
             while (true) {
                 try {
