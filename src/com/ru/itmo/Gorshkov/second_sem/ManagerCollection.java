@@ -48,8 +48,8 @@ public class ManagerCollection {
         return hum;
     }
 
-    public void exportfromfile(String path) {
-        try (Scanner scan = new Scanner(Paths.get(System.getenv(path)))) {
+    public void exportfromfile(String path) throws IOException {
+        try (Scanner scan = new Scanner(Paths.get(path))) {
             if (scan.hasNextLine()) {
                 String str = scan.nextLine();
                 if (!str.equals("{\"Humans\" : [")) throw new JSONException();
@@ -67,17 +67,15 @@ public class ManagerCollection {
                 }
             }
         } catch (IOException e) {
-            System.err.println("File not found");
-            if (System.getenv(this.path).equals(System.getenv(path))) {
-                saveToFile();
-                System.out.println("Created file to save collection: " + System.getenv(this.path));
-            }
+            throw e;
         } catch (java.lang.StringIndexOutOfBoundsException | JSONException e) {
             System.err.println("Invalid JSON Format");
+        } catch (Throwable e) {
+            System.err.println("error");
         }
     }
 
-    public Human parseHuman(String str) {
+    public Human parseHuman(String str)  throws JSONException {
         try {
             Human human = helpParse(str);
             JSONObject jsonObject = (JSONObject) JSON.parse(str);
@@ -95,11 +93,11 @@ public class ManagerCollection {
             return human;
         } catch (JSONException | NullPointerException e) {
             System.err.println("Can't parse Human\nInvalid syntax\nTry to use \"help\" for more information");
-            return null;
+            throw new JSONException();
         }
     }
 
-    public Human helpParse(String str) {
+    public Human helpParse(String str) throws JSONException{
         try {
             JSONObject jsonObject = (JSONObject) JSON.parse(str);
             Object name = jsonObject.get("name");
@@ -119,12 +117,19 @@ public class ManagerCollection {
             return human;
         } catch (JSONException e) {
             System.err.println("Can't parse Human\nInvalid syntax\nTry to use \"help\" for more information");
-            return null;
+            throw e;
         }
+    }
+
+    public void saveToFile(String path) {
+        helpSave(path);
     }
 
     public void saveToFile() {
         String newpath = System.getenv(path);
+        helpSave(newpath);
+    }
+    private void helpSave(String newpath) {
         try (PrintWriter writer = new PrintWriter(newpath)) {
             writer.println("{\"Humans\" : [");
             boolean i = true;
@@ -142,11 +147,6 @@ public class ManagerCollection {
         } catch (JSONException | NullPointerException e) {
             System.err.println("Can't save Human to file\nInvalid syntax");
         }
-    }
-
-    public void updateColl() {
-        collection.clear();
-        exportfromfile(path);
     }
     public void outCollection() {
         this.getCollection().forEach((s, human) -> {

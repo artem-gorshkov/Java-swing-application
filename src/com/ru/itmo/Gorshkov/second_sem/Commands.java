@@ -5,7 +5,7 @@ import java.io.Serializable;
 public enum Commands implements Serializable {
     SHOW("show"), EXIT("exit"), HELP("help"), INFO("info"), INSERT("insert"),
     ADD_IF_MAX("add_if_max"), REMOVE_GREATER_KEY("remove_greater_key"), REMOVE("remove"),
-    IMPORT("import"), LOAD("load"), SAVE("save");
+    IMPORT("import"), LOAD("load"), SAVE("save"), REQUEST("request");
 
     public String getText() {
         return text;

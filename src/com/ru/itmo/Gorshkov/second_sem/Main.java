@@ -1,10 +1,8 @@
 package com.ru.itmo.Gorshkov.second_sem;
 
-import com.ru.itmo.Gorshkov.first_sem.Human;
+
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.net.*;
 import java.util.Scanner;
@@ -19,13 +17,17 @@ public class Main {
     public static void main(String args[]) {
         //Check environment variable
         try {
-            Path path1 = Paths.get(System.getenv(path));
+            Paths.get(System.getenv(path));
         } catch (Throwable e) {
             System.err.println("Can't find environment variable\nPlease write way to file in \"PathLab6\"");
             System.exit(3);
         }
         ManagerCollection coll = new ManagerCollection(path);
-        coll.exportfromfile(path);
+        try {
+            coll.exportfromfile(System.getenv(path));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
         timeOfStartProg = System.currentTimeMillis();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -48,7 +50,6 @@ public class Main {
                 try {
                     DatagramPacket packet = new DatagramPacket(b, b.length);
                     socket.receive(packet);
-                    System.out.println("One more user in");
                     Runnable r = new Connection(socket, packet, coll);
                     Thread t = new Thread(r);
                     t.start();
