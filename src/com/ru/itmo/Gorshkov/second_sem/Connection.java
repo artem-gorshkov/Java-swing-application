@@ -87,8 +87,10 @@ public class Connection implements Runnable {
                 return save(command.getArg());
             case "insert":
                 insert(command.getArg());
+                return null;
             case "remove_greater_key":
                 remove_greater_key(command.getArg());
+                return null;
             default:
                 return null;
         }
@@ -105,14 +107,12 @@ public class Connection implements Runnable {
             String element = arg.substring(arg.indexOf(' ') + 1);
             Human hum = managerCollection.parseHuman(element);
             if (!key.equals(hum.getName())) hum.setName(key);
-            System.out.println(hum);
             TreeMap<String, Human> one = new TreeMap<>();
             one.put(key, hum);
             Set<Human> set = Stream.concat(one.values().stream(), managerCollection.getCollection().values().stream()).collect(Collectors.toSet());
             managerCollection.getCollection().clear();
             set.forEach(managerCollection::put);
-            //System.out.println("Added " + key + " successfully");
-        } catch (Throwable ee) {
+        } catch (Throwable e) {
             System.err.println("Can't insert Human");
         }
     }
@@ -127,8 +127,6 @@ public class Connection implements Runnable {
             Human hum = managerCollection.parseHuman(arg);
             TreeMap<String, Human> one = new TreeMap<>();
             one.put(hum.getName(), hum);
-            //System.out.println(hum.hashCode());
-            //System.out.println(managerCollection.getCollection().values().stream().sorted(Comparator.reverseOrder()).findFirst().get().hashCode());
             if (managerCollection.getCollection().values().stream().sorted(Comparator.reverseOrder()).findFirst().get().compareTo(hum) < 0 && !(hum == null)) {
                 Set<Human> set = Stream.concat(one.values().stream(), managerCollection.getCollection().values().stream()).collect(Collectors.toSet());
                 managerCollection.getCollection().clear();
@@ -146,9 +144,7 @@ public class Connection implements Runnable {
      * @param arg must be: {String key}
      */
     private void remove_greater_key(String arg) {
-        System.out.println(managerCollection.getCollection().keySet());
         Set<String> newSet = managerCollection.getCollection().keySet().stream().filter(s -> s.compareTo(arg) < 0).collect(Collectors.toSet());
-        System.out.println(newSet);
         for (Map.Entry<String, Human> entry : managerCollection.getCollection().entrySet()) {
             if (newSet.contains(entry.getKey())) {
                 managerCollection.getCollection().remove(entry.getKey());

@@ -8,7 +8,6 @@ import com.ru.itmo.Gorshkov.first_sem.Condition;
 import com.ru.itmo.Gorshkov.first_sem.Human;
 import com.ru.itmo.Gorshkov.first_sem.MaterialProperty;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
