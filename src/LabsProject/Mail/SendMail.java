@@ -21,7 +21,7 @@ public class SendMail {
         this.login  = "265087@niuitmo.ru";
         this.password = "wAd|eToDJfF}f@CI";
     }
-    public void send(String txt, String adresat) {
+    public void send(String txt, String adresat) throws MessagingException {
         Properties prop = new Properties();
 
         prop.put("mail.smtp.host", service.getHost());
@@ -47,7 +47,7 @@ public class SendMail {
         } catch (AuthenticationFailedException e) {
             System.err.println("Error: Invalid login or password!");
         } catch (MessagingException ee) {
-            System.err.println("Error: something worng");
+            throw new MessagingException();
         }
     }
 }

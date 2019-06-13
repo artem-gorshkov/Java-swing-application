@@ -8,4 +8,5 @@ import java.sql.SQLException;
 
 public interface Command {
     Result execute(Reciver reciver) throws SQLException;
+    public void addNick(String nick);
 }

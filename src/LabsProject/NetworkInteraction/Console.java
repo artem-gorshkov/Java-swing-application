@@ -27,6 +27,7 @@ public class Console {
     private static final String notFoundArgument = "Not found argument\nTry to use \"help\" to get more information";
     public static final String AskLogin = "You need to log in (or sing in). Enter Nickname or write \"signin\"";
     public static final String emailIn = "Enter your email: ";
+    public static final String enterNick = "Enter nick: ";
 
     public Command authorization() {
         System.out.println(AskLogin);
@@ -35,19 +36,22 @@ public class Console {
         if(nick.equals("signin")) {
             System.out.print(emailIn);
             String email = scan.nextLine();
-            while(!Pattern.matches("[a-zA-Z0-9]{1,}[@]{1}[a-z]{5,}[.]{1}+[a-z]{3}", email)){
-                System.err.println("Inccorrect email format");
-                System.out.print(emailIn);
-                email = scan.nextLine();
-            }
+//            while(!Pattern.matches("[a-zA-Z0-9]{1,}[@]{1}[a-z]{5,}[.]{1}+[a-z]{3}", email)){
+//                System.err.println("Inccorrect email format");
+//                System.out.print(emailIn);
+//                email = scan.nextLine();
+//            }
+            System.out.print(enterNick);
+            String nickname = scan.nextLine();
             Registration reg = new Registration(email);
-            reg.addNick(email.substring(0, email.indexOf('@')));
+            reg.addNick(nickname);
             return reg;
         }
         System.out.print("Password: ");
-        char[] passwd = System.console().readPassword();
+        //char[] passwd = System.console().readPassword();
+        String ps = scan.nextLine();
         this.nick = nick;
-        this.passwd = new String(passwd);
+        this.passwd = ps;//new String(passwd);
         Authorization command = new Authorization(this.passwd);
         command.addNick(this.nick);
         return command;
@@ -59,7 +63,7 @@ public class Console {
             Command command = getCommand();
             if (!(command == null)) {
                 k = false;
-                ((AbstractCommand) command).addNick(nick);
+                command.addNick(nick);
                 return command;
             }
         }
@@ -88,23 +92,19 @@ public class Console {
             } else {
                 switch (cmnd) {
                     case "insert":
-                        if (!arg.matches("\\w*\\s\\{[\\s\\S]*\\}")) {
-                            System.err.println(invalidSyntax);
-                        } else {
                             try {
-                                String element = arg.substring(arg.indexOf(' ') + 1);
-                                ManagerCollection.parseHuman(element);
+                                ManagerCollection.parseHuman(arg);
                                 command = new Insert(arg);
                             } catch (JSONException e) {
+                                System.err.println(invalidSyntax);
                             }
-                        }
                         break;
                     case "add_if_max":
                         try {
-                            String element = arg.substring(arg.indexOf(' ') + 1);
-                            ManagerCollection.parseHuman(element);
+                            ManagerCollection.parseHuman(arg);
                             command = new Add_If_Max(arg);
                         } catch (JSONException e) {
+                            System.err.println(invalidSyntax);
                         }
                         break;
                     case "remove_greater_key":

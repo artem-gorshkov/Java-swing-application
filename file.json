@@ -1,3 +1,6 @@
 {"Humans" : [
-{"allProperty":[{"name":"Car"}],"birthday":155635760124,"condition":"ALARM","cordX":0.0,"cordY":6.0,"name":"Leha"},
-{"allProperty":[{"name":"Car"}],"birthday":155635760124,"condition":"ALARM","cordX":0.0,"cordY":6.0,"name":"Sanhes"}]}
+{"allProperty":[{"name":"Home"},{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110Z[UTC]","condition":"ALARM","cordX":0.0,"cordY":6.0,"name":"Alex"},
+{"allProperty":[{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110Z[UTC]","condition":"ALARM","cordX":0.0,"cordY":6.0,"name":"Artem"},
+{"allProperty":[],"birthday":"2019-06-13T14:50:24.110Z[UTC]","condition":"CALM","cordX":50.0,"cordY":10.0,"name":"Leha"},
+{"allProperty":[],"birthday":"2019-06-13T21:50:24.110+03:00[Europe/Paris]","condition":"SCARED","cordX":100.0,"cordY":6.0,"name":"Sanhes"},
+{"allProperty":[{"name":"Ring"},{"name":"Big_Home"},{"name":"BMW"},{"name":"Boat"}],"birthday":"2019-06-13T21:53:48.150+03:00[Europe/Moscow]","condition":"SCARED","cordX":100.0,"cordY":6.0,"name":"Putin"}]}

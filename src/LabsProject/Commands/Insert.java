@@ -20,12 +20,14 @@ public class Insert extends AbstractCommand {
     public Result execute(Reciver reciver) throws SQLException {
         DataBaseReciver DBreciver = (DataBaseReciver) reciver;
         Human human = ManagerCollection.parseHuman(this.getArguments());
-        int count = DBreciver.addHuman(human, this.getNickname());
-        if (count == 1) {
-            return new Result("Insert " + human.getName() + " succesfully", DBreciver.getAllHuman());
+        if(DBreciver.checkKey(human.getName())) {
+            int count = DBreciver.addHuman(human, this.getNickname());
+            if (count == 1) {
+                return new Result("Insert " + human.getName() + " succesfully", DBreciver.getAllHuman());
+            } else {
+                return new Result("Can't insert " + human.getName(), DBreciver.getAllHuman());
+            }
         }
-        else {
-            return new Result("Can't insert " + human.getName(), DBreciver.getAllHuman());
-        }
+        else return new Result("Human with name " + human.getName() + " already exist");
     }
 }

@@ -2,9 +2,10 @@ package LabsProject.NetworkInteraction;
 
 import LabsProject.Nature.Homosapiens.Human;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Result {
+public class Result implements Serializable {
     public Result(String answer, List<Human> humans) {
         this.answer = answer;
         this.humans = humans;

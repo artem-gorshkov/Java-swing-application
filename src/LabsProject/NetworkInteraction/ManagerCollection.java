@@ -13,8 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -92,10 +90,9 @@ public class ManagerCollection {
         Object condition = jsonObject.get("condition");
         human.setCondition(Condition.valueOf((String) condition));
         Object birhday = jsonObject.get("birthday");
-        if (birhday != null) human.setBirthday((ZonedDateTime) birhday);
-        else human.setBirthday(ZonedDateTime.of(LocalDateTime.of(2000,1,25,5,25), ZoneId.systemDefault()));
+        if (birhday != null) human.setBirthday(ZonedDateTime.parse((String) birhday));
+        else human.setBirthday(ZonedDateTime.now());
         return human;
-
     }
 
     public static String saveToFile(String path, List<Human> list) {

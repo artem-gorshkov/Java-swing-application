@@ -3,10 +3,7 @@ package LabsProject.Nature.Homosapiens;
 import LabsProject.Nature.Homosapiens.Propetyies.Property;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 import java.time.ZonedDateTime;
 
 
@@ -66,12 +63,8 @@ public class Human implements Comparable<Human>, Serializable {
         //System.out.println("У человека " + this.getName() + " появилось новое имущество: " + property.getName());
     }
 
-    public Property[] getAllProperty() {
-        Property[] propertyArray = new Property[allProperty.size()];
-        for (int i = 0; i < allProperty.size(); i++) {
-            propertyArray[i] = allProperty.get(i);
-        }
-        return propertyArray;
+    public List<Property> getAllProperty() {
+        return allProperty;
     }
 
     public void delProperty(Property property) {
@@ -141,7 +134,7 @@ public class Human implements Comparable<Human>, Serializable {
         Human other = (Human) otherObject;
         return this.getName().equals(other.getName()) && this.getCondition().equals(other.getCondition()) &&
                 this.getCordY() == other.getCordY() && this.getCordX() == other.getCordX() &&
-                Arrays.equals(this.getAllProperty(), other.getAllProperty()) && this.getBirthday().equals(other.getBirthday());
+                Arrays.equals(this.getAllProperty().toArray(), other.getAllProperty().toArray()) && this.getBirthday().equals(other.getBirthday());
     }
 
     public int hashCode() {

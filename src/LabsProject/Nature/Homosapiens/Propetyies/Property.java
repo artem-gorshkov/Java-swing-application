@@ -44,7 +44,7 @@ public abstract class Property implements Serializable {
             return getClass().getSimpleName() + "[name=" + this.getName() + ",owner=" + this.getOwner().toString() + "]";
         }
         else {
-            return getClass().getSimpleName() + "[name=" + this.getName() + ",owner=No]";
+            return "Prop" + "[name=" + this.getName()  + "]";
         }
     }
 }

@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class GeneratorPassword {
 
-    public static final int length = 8;
+    public static final int length = 12;
 
     public static final String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -20,13 +20,22 @@ public class GeneratorPassword {
     public static final String alphanum = upper + lower + digits + spes;
 
     private static final String pepper = "*&^mVLC(#";
+    public static String getSalt() {
+        char[] chars = alphanum.toCharArray();
+        char[] paswd = new char[length/2];
+        Random random = new Random();
+        for (int i = 0; i < length/2; i++) {
+            paswd[i] = chars[random.nextInt(chars.length)];
+        }
+        return new String(paswd);
+    }
 
     public static String get() {
         char[] chars = alphanum.toCharArray();
         char[] paswd = new char[length];
         Random random = new Random();
         for (int i = 0; i < length; i++) {
-            paswd[8] = chars[random.nextInt(chars.length)];
+            paswd[i] = chars[random.nextInt(chars.length)];
         }
         return new String(paswd);
     }

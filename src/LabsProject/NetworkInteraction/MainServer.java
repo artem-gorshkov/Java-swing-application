@@ -55,6 +55,7 @@ public final class MainServer {
             }
         } catch (Exception e) {
             System.err.println("can't create socket");
+            e.printStackTrace();
         }
     }
 }

@@ -8,11 +8,15 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 public class Info implements Command, Serializable {
+    private String nickname;
 
     @Override
     public Result execute(Reciver reciver) throws SQLException {
         DataBaseReciver DBreciver = (DataBaseReciver) reciver;
         String answer = "Number of element: " + DBreciver.numberOfElement() + ", Number of users: " + DBreciver.numberOfUser();
         return new Result(answer);
+    }
+    public void addNick(String nickname) {
+        this.nickname = nickname;
     }
 }

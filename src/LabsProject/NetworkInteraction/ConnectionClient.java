@@ -77,13 +77,17 @@ public class ConnectionClient {
     final String yes = "login successful";
     final String no = "incorrect. Try again";
     final String parol = "check your email";
+    final String email = "Incorrect email";
 
     public boolean handlePacket(Result result, Authorization command) {
         if (result.getAnswer().equals(yes) || result.getAnswer().equals(parol)) {
             System.out.println(result.getAnswer());
             return true;
         } else {
-            System.out.println(no);
+            if (result.getAnswer().equals(no))
+                System.out.println(no);
+            if (result.getAnswer().equals(email))
+                System.out.println(email);
             return false;
         }
     }
