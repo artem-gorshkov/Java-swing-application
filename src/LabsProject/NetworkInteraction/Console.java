@@ -1,13 +1,17 @@
 package LabsProject.NetworkInteraction;
 
 
+import LabsProject.Commands.*;
 import com.alibaba.fastjson.JSONException;
 
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 
 public class Console {
     private final Scanner scan = new Scanner(System.in);
+    private String nick;
+    private String passwd;
     private static final String help = "Usage:" +
             "\ninfo - Show info about type of collection, number of collection elements, time from star program, time of file creation" +
             "\ninsert {String key} {element} - Add to collection one element with specific key" +
@@ -21,13 +25,41 @@ public class Console {
             "\nsave {String path} - Save collection to specific(arg) file on server";
     private static final String invalidSyntax = "Invalid syntax\nTry to use \"help\" to get more information";
     private static final String notFoundArgument = "Not found argument\nTry to use \"help\" to get more information";
+    public static final String AskLogin = "You need to log in (or sing in). Enter Nickname or write \"signin\"";
+    public static final String emailIn = "Enter your email: ";
 
-    public Command exec() {
+    public Command authorization() {
+        System.out.println(AskLogin);
+        System.out.print("Nick: ");
+        String nick = scan.nextLine();
+        if(nick.equals("signin")) {
+            System.out.print(emailIn);
+            String email = scan.nextLine();
+            while(!Pattern.matches("[a-zA-Z0-9]{1,}[@]{1}[a-z]{5,}[.]{1}+[a-z]{3}", email)){
+                System.err.println("Inccorrect email format");
+                System.out.print(emailIn);
+                email = scan.nextLine();
+            }
+            Registration reg = new Registration(email);
+            reg.addNick(email.substring(0, email.indexOf('@')));
+            return reg;
+        }
+        System.out.print("Password: ");
+        char[] passwd = System.console().readPassword();
+        this.nick = nick;
+        this.passwd = new String(passwd);
+        Authorization command = new Authorization(this.passwd);
+        command.addNick(this.nick);
+        return command;
+    }
+
+    public Command giveCommand() {
         boolean k = true;
         while (k) {
             Command command = getCommand();
             if (!(command == null)) {
                 k = false;
+                ((AbstractCommand) command).addNick(nick);
                 return command;
             }
         }
@@ -62,7 +94,7 @@ public class Console {
                             try {
                                 String element = arg.substring(arg.indexOf(' ') + 1);
                                 ManagerCollection.parseHuman(element);
-                                command = new Command(Commands.INSERT, arg);
+                                command = new Insert(arg);
                             } catch (JSONException e) {
                             }
                         }
@@ -71,24 +103,24 @@ public class Console {
                         try {
                             String element = arg.substring(arg.indexOf(' ') + 1);
                             ManagerCollection.parseHuman(element);
-                            command = new Command(Commands.ADD_IF_MAX, arg);
+                            command = new Add_If_Max(arg);
                         } catch (JSONException e) {
                         }
                         break;
                     case "remove_greater_key":
-                        command = new Command(Commands.REMOVE_GREATER_KEY, arg);
+                        command = new Remove_greater_key(arg);
                         break;
                     case "remove":
-                        command = new Command(Commands.REMOVE, arg);
+                        command = new Remove(arg);
                         break;
                     case "import":
-                        command = new Command(Commands.IMPORT, arg);
+                        command = new Import(arg);
                         break;
                     case "load":
-                        command = new Command(Commands.LOAD, arg);
+                        command = new Load(arg);
                         break;
                     case "save":
-                        command = new Command(Commands.SAVE, arg);
+                        command = new Save(arg);
                         break;
                     default:
                         NotFoundCmnd(cmnd);
@@ -98,13 +130,13 @@ public class Console {
             cmnd = callcmnd;
             switch (cmnd) {
                 case "show":
-                    command = new Command(Commands.SHOW);
+                    command = new Show();
                     break;
                 case "exit":
-                    command = new Command(Commands.EXIT);
+                    System.exit(8);
                     break;
                 case "info":
-                    command = new Command(Commands.INFO);
+                    command = new Info();
                     break;
                 case "help":
                     help();

@@ -1,34 +1,24 @@
 package LabsProject.NetworkInteraction;
 
+import LabsProject.Recivers.DataBaseReciver;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Scanner;
 
-public class MainServer {
-    public static final String path = "PathLab6";
+public final class MainServer {
     private static Integer port;
-    static private Scanner scan = new Scanner(System.in);
 
     public static void main(String args[]) {
-        try {
-            Paths.get(System.getenv(path));
-        } catch (Throwable e) {
-            System.err.println("Can't find environment variable\nPlease write way to file in \"PathLab6\"");
-            System.exit(3);
-        }
-        ManagerCollection coll = new ManagerCollection();
-        try {
-            coll.exportfromfile(System.getenv(path));
-        } catch (Throwable e) {
-            System.err.println("Can't parse collection");
-        }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                coll.saveToFile(path);
-                System.out.println("Collection saved to " + System.getenv(path));
+                // прописать завершение
             } catch (Throwable e) {
                 System.err.println("An error occurred while file saving");
             }
@@ -38,6 +28,16 @@ public class MainServer {
         } catch (Throwable e) {
             port = 0;
         }
+        DataBaseReciver dbr = null;
+        try {
+            String url = "jdbc:postgresql://localhost:5432/lab7";
+            String username = "artem";
+            String password = "password";
+            Connection connDB = DriverManager.getConnection(url, username, password);
+            dbr = new DataBaseReciver(connDB);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         try {
             byte b[] = new byte[Integer.MAX_VALUE/32];
             DatagramSocket socket = new DatagramSocket(port);
@@ -46,7 +46,7 @@ public class MainServer {
                 try {
                     DatagramPacket packet = new DatagramPacket(b, b.length);
                     socket.receive(packet);
-                    Runnable r = new ConnectionServer(socket, packet, coll);
+                    Runnable r = new ConnectionServer(socket, packet, dbr);
                     Thread t = new Thread(r);
                     t.start();
                 } catch (IOException e) {
@@ -55,20 +55,6 @@ public class MainServer {
             }
         } catch (Exception e) {
             System.err.println("can't create socket");
-        }
-    }
-    private static void enterPort() {
-        System.out.println();
-        System.out.println("Enter port");
-        boolean k = true;
-        while (k) {
-            if (scan.hasNextInt()) {
-                port = scan.nextInt();
-                k = false;
-            } else {
-                System.err.println("Port must be number");
-                scan.nextLine();
-            }
         }
     }
 }

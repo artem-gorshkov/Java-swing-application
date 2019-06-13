@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.time.ZonedDateTime;
 
 
 public class Human implements Comparable<Human>, Serializable {
@@ -17,20 +18,20 @@ public class Human implements Comparable<Human>, Serializable {
     private double cordX;
     private double cordY;
     private boolean sit;
-    private Date birthday;
+    private ZonedDateTime birthday;
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(ZonedDateTime birthday) {
         this.birthday = birthday;
     }
 
-    public Date getBirthday() {
+    public ZonedDateTime getBirthday() {
         return birthday;
     }
 
     public Human(String name) {
         this.name = name;
         condition = Condition.CALM;
-        allProperty = new ArrayList<Property>();
+        allProperty = new ArrayList<>();
         allProperty.ensureCapacity(5);
         this.sit = false;
         //System.out.println("Создан человек " + this.getName());
