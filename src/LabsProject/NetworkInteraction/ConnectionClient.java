@@ -17,8 +17,6 @@ import java.util.List;
 public class ConnectionClient {
 
     private DatagramChannel channel;
-    private Command interruptedCommand;
-
 
     ConnectionClient(InetAddress serverAddress, Integer port) {
         try {
@@ -76,18 +74,15 @@ public class ConnectionClient {
 
     final String yes = "login successful";
     final String no = "incorrect. Try again";
-    final String parol = "check your email";
+    final String parol = "Check your email";
     final String email = "Incorrect email";
+    final String newuser = "Can't add new user";
 
     public boolean handlePacket(Result result, Authorization command) {
+        System.out.println(result.getAnswer());
         if (result.getAnswer().equals(yes) || result.getAnswer().equals(parol)) {
-            System.out.println(result.getAnswer());
             return true;
         } else {
-            if (result.getAnswer().equals(no))
-                System.out.println(no);
-            if (result.getAnswer().equals(email))
-                System.out.println(email);
             return false;
         }
     }
@@ -109,7 +104,6 @@ public class ConnectionClient {
             ObjectInputStream objInStream = new ObjectInputStream(arrayInStream);
             return (Result) objInStream.readObject();
         } catch (PortUnreachableException ee) {
-            interruptedCommand = command;
             System.err.println("Server is not responding");
             Request();
             throw new ServerNotRespondException();
@@ -136,13 +130,5 @@ public class ConnectionClient {
         } catch (Exception e) {
             throw e;
         }
-    }
-
-    public void setInterruptedCommand(Command interruptedCommand) {
-        this.interruptedCommand = interruptedCommand;
-    }
-
-    public Command getInterruptedCommand() {
-        return interruptedCommand;
     }
 }

@@ -93,8 +93,8 @@ public class DataBaseReciver implements Reciver {
         PreparedStatement pst = conn.prepareStatement(getpswd);
         pst.setString(1, nick);
         ResultSet rs = pst.executeQuery();
-        String [] answer = new String[2];
-        while(rs.next()) {
+        String[] answer = new String[2];
+        while (rs.next()) {
             answer[0] = rs.getString(1);
             answer[1] = rs.getString(2);
         }
@@ -145,10 +145,12 @@ public class DataBaseReciver implements Reciver {
         final String checkKey = "Select name from Humans where name = ?";
         return helpcheck(checkKey, key);
     }
+
     public boolean checkUser(String nick) throws SQLException {
         final String checkKey = "Select nickname from Users where nickname = ?";
         return helpcheck(checkKey, nick);
     }
+
     private boolean helpcheck(String query, String key) throws SQLException {
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setString(1, key);
@@ -159,6 +161,26 @@ public class DataBaseReciver implements Reciver {
         }
         if (name != null) return false;
         else return true;
+    }
+
+    public void createTables() throws SQLException {
+        final String user = "create table Users (nickname varchar(80) primary key, password varchar(160), salt varchar(6))";
+        final String humans = "create table Humans(name varchar(80) primary key, birthday timestamp with time zone, timezone varchar(80), condition varchar(80), cordX real, cordY real, nickname varchar(80) references Users)";
+        final String properties = "create table properties (name varchar(80), human varchar(80) references Humans (name))";
+        Statement st = conn.createStatement();
+        st.executeUpdate(user);
+        st.executeUpdate(humans);
+        st.executeUpdate(properties);
+    }
+
+    public void dropTables() throws SQLException {
+        final String user = "DELETE FROM Users";
+        final String humans = "DELETE FROM Humans";
+        final String properties = "DELETE FROM properties";
+        Statement st = conn.createStatement();
+        st.executeUpdate(properties);
+        st.executeUpdate(humans);
+        st.executeUpdate(user);
     }
 
 }
