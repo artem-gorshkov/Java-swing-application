@@ -17,6 +17,16 @@ public class Human implements Comparable<Human>, Serializable {
     private boolean sit;
     private ZonedDateTime birthday;
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    private int color;
+
     public void setBirthday(ZonedDateTime birthday) {
         this.birthday = birthday;
     }

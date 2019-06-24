@@ -18,7 +18,7 @@ public class ConnectionClient {
 
     private DatagramChannel channel;
 
-    ConnectionClient(InetAddress serverAddress, Integer port) {
+    public ConnectionClient(InetAddress serverAddress, Integer port) {
         try {
             SocketAddress address = new InetSocketAddress(serverAddress, port);
             this.channel = DatagramChannel.open();
@@ -72,11 +72,11 @@ public class ConnectionClient {
         }
     }
 
-    final String yes = "login successful";
-    final String no = "incorrect. Try again";
-    final String parol = "Check your email";
-    final String email = "Incorrect email";
-    final String newuser = "Can't add new user";
+    final String yes = "login_successful";
+    final String no = "incorrect";
+    final String parol = "Check";
+    final String email = "incorrect";
+    final String newuser = "incorrect";
 
     public boolean handlePacket(Result result, Authorization command) {
         System.out.println(result.getAnswer());

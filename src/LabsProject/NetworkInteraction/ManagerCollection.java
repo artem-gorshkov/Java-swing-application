@@ -22,7 +22,7 @@ public class ManagerCollection {
 
     }
 
-    public static List<Human> exportfromfile(String path) throws Exception {
+    public static List<Human> exportfromfile(String path)  {
         try (Scanner scan = new Scanner(Paths.get(path))) {
             List<Human> list = new LinkedList<>();
             if (scan.hasNextLine()) {
@@ -44,14 +44,15 @@ public class ManagerCollection {
             return list;
         } catch (IOException e) {
             System.err.println("File not found");
-            throw e;
+
         } catch (java.lang.StringIndexOutOfBoundsException | JSONException e) {
             System.err.println("Invalid JSON Format");
-            throw e;
+
         } catch (Throwable e) {
             System.err.println("error");
-            throw e;
+
         }
+        return null;
     }
 
     public static Human parseHuman(String str) throws JSONException {

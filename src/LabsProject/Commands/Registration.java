@@ -30,19 +30,20 @@ public class Registration extends Authorization {
             String hashpswd = GeneratorPassword.hash(passwd, salt);
             String mail = "Hello!\nYour login: " + this.getNickname() + "\nYour password: " + passwd;
             SendMail sm = new SendMail();
+            dbReciver.checkUser(this.getNickname());
             if (dbReciver.checkUser(this.getNickname())) {
                 sm.send(mail, this.getArguments());
                 int count = dbReciver.addUser(this.getNickname(), hashpswd, salt);
                 if (count == 1) {
-                    return new Result("Check your email");
+                    return new Result("Check");
                 } else {
-                    return new Result("Can't add new user");
+                    return new Result("incorrect");
                 }
             } else {
                 return new Result("User already exist");
             }
         } catch (MessagingException e) {
-            return new Result("Incorrect email");
+            return new Result("incorrect");
         }
     }
     private Result helios(DataBaseReciver reciver) throws  SQLException{

@@ -5,6 +5,7 @@ import LabsProject.Nature.Homosapiens.Human;
 import LabsProject.Nature.Homosapiens.Propetyies.MaterialProperty;
 import LabsProject.Nature.Homosapiens.Propetyies.Property;
 
+import java.awt.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -39,6 +40,7 @@ public class DataBaseReciver implements Reciver {
         human.setCondition(Condition.valueOf(rs.getString(4)));
         human.setCordX(rs.getInt(5));
         human.setCordY(rs.getInt(6));
+        human.setColor(rs.getInt(8));
         final String getProp = "select properties.name from properties where properties.human = ?";
         PreparedStatement pst = conn.prepareStatement(getProp);
         pst.setString(1, human.getName());
@@ -59,7 +61,7 @@ public class DataBaseReciver implements Reciver {
     }
 
     public int addHuman(Human human, String login) throws SQLException {
-        final String add = "Insert into Humans Values (?, ?, ?, ?, ?, ?, ?)";
+        final String add = "Insert into Humans Values (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst = conn.prepareStatement(add);
         pst.setString(1, human.getName());
         pst.setObject(2, human.getBirthday().toOffsetDateTime());
@@ -68,6 +70,12 @@ public class DataBaseReciver implements Reciver {
         pst.setDouble(5, human.getCordX());
         pst.setDouble(6, human.getCordY());
         pst.setString(7, login);
+
+        final String color = "Select color from Users where nickname =?";
+        PreparedStatement st = conn.prepareStatement(color);
+        st.setString(1, login);
+
+        pst.setInt(8, st.executeQuery().getInt(1));
         int l = pst.executeUpdate();
         final String addProp = "Insert into Properties Values (?, ?)";
         PreparedStatement pstProp = conn.prepareStatement(addProp);
@@ -79,12 +87,23 @@ public class DataBaseReciver implements Reciver {
         return l;
     }
 
+    private static class GetColor {
+        static Color colors[] = new Color[]{Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE};
+        static int k = -1;
+
+        public static Color getColor() {
+            k++;
+            return colors[k];
+        }
+    }
+
     public int addUser(String nick, String hashpswd, String salt) throws SQLException {
-        final String addUser = "Insert into Users values (?,?,?)";
+        final String addUser = "Insert into Users values (?,?,?,?)";
         PreparedStatement pst = conn.prepareStatement(addUser);
         pst.setString(1, nick);
         pst.setString(2, hashpswd);
         pst.setString(3, salt);
+        pst.setInt(4, GetColor.getColor().getRGB());
         return pst.executeUpdate();
     }
 
@@ -99,6 +118,18 @@ public class DataBaseReciver implements Reciver {
             answer[1] = rs.getString(2);
         }
         return answer;
+    }
+
+    public int getColor(String nick) throws SQLException {
+        final String getcol = "Select color from users where nickname = ?";
+        PreparedStatement pst = conn.prepareStatement(getcol);
+        pst.setString(1, nick);
+        ResultSet rs = pst.executeQuery();
+        int col = 0;
+        while (rs.next()) {
+           col = rs.getInt(1);
+        }
+        return col;
     }
 
     public long numberOfElement() throws SQLException {
@@ -122,9 +153,12 @@ public class DataBaseReciver implements Reciver {
         PreparedStatement pst = conn.prepareStatement(removeHum);
         pst.setString(1, name);
         pst.setString(2, nick);
-        final String delProp = "DELETE FROM Properties where human = ?";
+        final String delProp = "DELETE FROM Properties where human = ? and (select name FROM Humans WHERE name = ? And nickname = ?) = ?";
         PreparedStatement pstProp = conn.prepareStatement(delProp);
         pstProp.setString(1, name);
+        pstProp.setString(2, name);
+        pstProp.setString(3, nick);
+        pstProp.setString(4, name);
         pstProp.executeUpdate();
         return pst.executeUpdate();
     }

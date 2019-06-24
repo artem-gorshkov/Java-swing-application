@@ -43,7 +43,8 @@ public final class MainServer {
         }
         DataBaseReciver dbr = null;
         try {
-            Connection connDB = DriverManager.getConnection(heliosURL, heliosProp);
+            //Connection connDB = DriverManager.getConnection(heliosURL, heliosProp);
+            Connection connDB = DriverManager.getConnection(myURL, myProp);
             dbr = new DataBaseReciver(connDB);
             //dbr.dropTables();
             //dbr.createTables();
