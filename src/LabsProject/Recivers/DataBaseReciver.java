@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class DataBaseReciver implements Reciver {
@@ -74,8 +74,12 @@ public class DataBaseReciver implements Reciver {
         final String color = "Select color from Users where nickname =?";
         PreparedStatement st = conn.prepareStatement(color);
         st.setString(1, login);
-
-        pst.setInt(8, st.executeQuery().getInt(1));
+        ResultSet rs = st.executeQuery();
+        int k = 0;
+        while (rs.next()) {
+            k = rs.getInt(1);
+        }
+        pst.setInt(8, k);
         int l = pst.executeUpdate();
         final String addProp = "Insert into Properties Values (?, ?)";
         PreparedStatement pstProp = conn.prepareStatement(addProp);
@@ -88,9 +92,12 @@ public class DataBaseReciver implements Reciver {
     }
 
     private static class GetColor {
-        static Color colors[] = new Color[]{Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE};
+        private static Color colors[] = new Color[]{Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE};
+        static List<Color> colorsL = new ArrayList<>();
+        static {
+            colorsL.addAll(Arrays.asList(colors));
+        }
         static int k = -1;
-
         public static Color getColor() {
             k++;
             return colors[k];

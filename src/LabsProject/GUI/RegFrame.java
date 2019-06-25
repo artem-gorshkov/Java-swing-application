@@ -18,7 +18,7 @@ public class RegFrame extends JFrame {
     final String yes = "login_successful";
     final String no = "incorrect";
 
-    public RegFrame(String str, ModelFrame modelFrame) {
+    public RegFrame(String str) {
         super(str);
         setVisible(true);
         JPanel panel = new JPanel();
@@ -70,9 +70,15 @@ public class RegFrame extends JFrame {
                 ConnectionClient conn = new ConnectionClient(adr, Port);
                 Result res = conn.sendAndGetAnswer(command);
                 msg.setText(resource.getString(res.getAnswer()));
-                Config config = new Config(nickname, password, adr, Port, res.getHumans().get(0).getColor());
+
+                Config config = new Config(nickname, password, adr, Port, Color.RED.getRGB()); //res.getHumans().get(0).getColor());
                 if(res.getAnswer().equals(yes)) {
-                    modelFrame.PaintMainFrame(config);
+                    SwingApp.setConfig(config);
+                    SwingApp.regi = false;
+                    synchronized (SwingApp.lock) {
+                        SwingApp.lock.notifyAll();
+                    }
+                    setVisible(false);
                 }
             } catch (UnknownHostException e) {
                 msg.setText(resource.getString("hosterror"));

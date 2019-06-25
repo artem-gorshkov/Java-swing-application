@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MyModelTable extends AbstractTableModel {
-    private List<Human> humans;
 
+    private List<Human> humans;
     ResourceBundle resource = ResourceBundle.getBundle("GuiLabels");
+
     public MyModelTable(List<Human> h) {
         humans = h;
-
     }
 
     public int getColumnCount() {
-        return humans.size();
+        return 4;
     }
 
     public int getRowCount() {
-        return 4;
+        return humans.size();
     }
 
     public Object getValueAt(int row, int col) {

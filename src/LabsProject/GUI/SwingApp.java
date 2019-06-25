@@ -13,14 +13,42 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class SwingApp {
-    ResourceBundle resource = ResourceBundle.getBundle("GuiLabels");
+    static ResourceBundle resource = ResourceBundle.getBundle("GuiLabels");
+    public static boolean regi = true;
+
+    static private Config config;
+    public static Object lock = new Object();
 
     public static void main(String[] args) {
-        ModelFrame modelFrame = new ModelFrame();
+        System.out.println(Color.RED.getRGB());
         SwingUtilities.invokeLater(() -> {
-            JFrame gerframe = new RegFrame("Lab8", modelFrame);
+            new RegFrame("Lab8");
         });
+
+        synchronized (lock) {
+            while(regi) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+
+        }
+        SwingUtilities.invokeLater(() -> {
+            MyJFrame mainFrame = new MyJFrame("Lab8", config);
+        });
+
+    }
+
+    public static Config getConfig() {
+        return config;
+    }
+
+    public static void setConfig(Config config2) {
+        config = config2;
     }
 }

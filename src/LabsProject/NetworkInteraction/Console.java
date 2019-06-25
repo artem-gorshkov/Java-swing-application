@@ -70,9 +70,16 @@ public class Console {
         return null;
     }
 
+    public static Command  getCommandFromGUI(String str) {
+        return helpGetCommand(str);
+    }
+
     Command getCommand() {
+        return helpGetCommand(scan.nextLine());
+    }
+
+    static Command helpGetCommand(String callcmnd) {
         Command command = null;
-        String callcmnd = scan.nextLine();
         String cmnd;
         String arg;
         if (callcmnd.contains(" ")) {
@@ -92,12 +99,12 @@ public class Console {
             } else {
                 switch (cmnd) {
                     case "insert":
-                            try {
-                                ManagerCollection.parseHuman(arg);
-                                command = new Insert(arg);
-                            } catch (JSONException e) {
-                                System.err.println(invalidSyntax);
-                            }
+                        try {
+                            ManagerCollection.parseHuman(arg);
+                            command = new Insert(arg);
+                        } catch (JSONException e) {
+                            System.err.println(invalidSyntax);
+                        }
                         break;
                     case "add_if_max":
                         try {
@@ -156,26 +163,27 @@ public class Console {
             }
         }
         return command;
+
     }
 
     /**
      * Help show all getCommand in program.
      */
-    private void help() {
+    private static void help() {
         System.out.println(help);
     }
 
-    private void NotFoundCmnd(String cmnd) {
+    private static void NotFoundCmnd(String cmnd) {
 
         System.out.println("Not found \"" + cmnd + "\"\nTry to use \"help\" to get more information");
 
     }
 
-    private void DontneedArg(String cmnd) {
+    private static void DontneedArg(String cmnd) {
         System.out.println(cmnd + " don't need argument\nTry to use \"help\" to get more information");
     }
 
-    private void NotFoundArgument() {
+    private static void NotFoundArgument() {
         System.out.println(notFoundArgument);
     }
 }
