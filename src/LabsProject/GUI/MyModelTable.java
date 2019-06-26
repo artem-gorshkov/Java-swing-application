@@ -1,8 +1,12 @@
 package LabsProject.GUI;
 
+import LabsProject.Nature.Homosapiens.Condition;
 import LabsProject.Nature.Homosapiens.Human;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -16,11 +20,14 @@ public class MyModelTable extends AbstractTableModel {
     }
 
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     public int getRowCount() {
-        return humans.size();
+        if(humans!=null && !humans.isEmpty()) {
+            return humans.size();
+        }
+        return 0;
     }
 
     public Object getValueAt(int row, int col) {
@@ -31,9 +38,19 @@ public class MyModelTable extends AbstractTableModel {
             case 1:
                 return human.getName();
             case 2:
-                return human.getBirthday();
+                DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+                return human.getBirthday().format(formatter);
             case 3:
-                return human.getCondition();
+                return human.getBirthday().getZone();
+            case 4:
+                switch (human.getCondition()) {
+                    case ALARM:
+                        return "\uD83D\uDE12";
+                    case SCARED:
+                        return "\uD83D\uDE1E";
+                    case CALM:
+                        return "\uD83D\uDE10";
+                }
             default:
                 return null;
         }
@@ -50,6 +67,8 @@ public class MyModelTable extends AbstractTableModel {
                 return resource.getString("c3");
             case 3:
                 return resource.getString("c4");
+            case 4 :
+                return resource.getString("c5");
             default:
                 return null;
         }

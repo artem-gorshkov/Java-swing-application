@@ -23,8 +23,12 @@ public class SwingApp {
     public static Object lock = new Object();
 
     public static void main(String[] args) {
-        System.out.println(Color.RED.getRGB());
         SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel());
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
             new RegFrame("Lab8");
         });
 
@@ -39,6 +43,11 @@ public class SwingApp {
 
         }
         SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel());
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
             MyJFrame mainFrame = new MyJFrame("Lab8", config);
         });
 

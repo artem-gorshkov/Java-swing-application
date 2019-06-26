@@ -1,5 +1,5 @@
 {"Humans" : [
-{"allProperty":[{"name":"Home"},{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Europe/Moscow]","condition":"ALARM","cordX":0.0,"cordY":6.0,"name":"AAAAA"},
-{"allProperty":[{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Asia/Kolkata]","condition":"ALARM","cordX":0.0,"cordY":6.0,"name":"BBBBBBBBB"},
-{"allProperty":[{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Europe/Moscow]","condition":"CALM","cordX":50.0,"cordY":10.0,"name":"CCCCCCCCCCC"},
-{"allProperty":[{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Europe/Paris]","condition":"SCARED","cordX":100.0,"cordY":6.0,"name":"DDDDDDDDDDDDD"}]}
+{"allProperty":[{"name":"Home"},{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Europe/Moscow]","condition":"ALARM","cordX":300,"cordY":400,"name":"human1"},
+{"allProperty":[{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Asia/Kolkata]","condition":"ALARM","cordX":400,"cordY":200,"name":"human2"},
+{"allProperty":[{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Europe/Moscow]","condition":"CALM","cordX":200,"cordY":400,"name":"human3"},
+{"allProperty":[{"name":"Car"}],"birthday":"2019-06-13T17:50:24.110+03:00[Europe/Paris]","condition":"SCARED","cordX":400,"cordY":150,"name":"human4"}]}

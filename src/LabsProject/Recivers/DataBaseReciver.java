@@ -92,7 +92,7 @@ public class DataBaseReciver implements Reciver {
     }
 
     private static class GetColor {
-        private static Color colors[] = new Color[]{Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE};
+        private static Color colors[] = new Color[]{ Color.BLUE, Color.YELLOW, Color.ORANGE, Color.RED, Color.GREEN};
         static List<Color> colorsL = new ArrayList<>();
         static {
             colorsL.addAll(Arrays.asList(colors));

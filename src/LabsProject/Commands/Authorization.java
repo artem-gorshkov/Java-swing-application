@@ -29,7 +29,7 @@ public class Authorization extends AbstractCommand {
             Human hum = new Human("color");
             hum.setColor(dbReciver.getColor(this.getNickname()));
             Color.add(hum);
-            return new Result("login_successful");
+            return new Result("login_successful", Color);
         }
         else return new Result("incorrect");
     }
