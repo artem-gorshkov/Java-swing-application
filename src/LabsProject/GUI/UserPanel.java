@@ -42,6 +42,9 @@ public class UserPanel extends JPanel {
         console.setFont(arial);
         add(console);
         JButton changeLanguage = new JButton(resource.getString("changeLanguage"));
+        changeLanguage.addActionListener((event) -> {
+            JFrame change = new ChangeLanguageFrame("Change language");
+        });
         changeLanguage.setFont(arial);
         add(changeLanguage);
         JButton sendCommand = new JButton(resource.getString("sendCommand"));
@@ -59,6 +62,9 @@ public class UserPanel extends JPanel {
         });
         add(sendCommand);
         JButton exitButton = new JButton(resource.getString("exit"));
+        exitButton.addActionListener((event) -> {
+            System.exit(0);
+        });
         exitButton.setFont(arial);
         add(exitButton);
     }

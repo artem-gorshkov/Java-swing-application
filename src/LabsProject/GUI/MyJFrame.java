@@ -15,6 +15,8 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.Enumeration;
 import java.util.List;
@@ -54,6 +56,9 @@ public class MyJFrame extends JFrame {
         this.modelTable = new MyModelTable(res1.getHumans());
         JTable table = new JTable(modelTable);
         table.setFillsViewportHeight(true);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(modelTable);
+        table.setRowSorter(sorter);
+        sorter.setSortable(4, false);
         TableColumn column = null;
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
