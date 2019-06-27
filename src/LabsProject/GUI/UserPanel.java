@@ -23,7 +23,8 @@ public class UserPanel extends JPanel {
         this.frame = frame;
         this.config = config;
         GridLayout layout = new GridLayout(4, 2);
-        layout.setHgap(25);
+        layout.setHgap(10);
+        layout.setVgap(5);
         setLayout(layout);
         JLabel NameHeader = new JLabel(resource.getString("name"));
         NameHeader.setHorizontalAlignment(JLabel.CENTER);

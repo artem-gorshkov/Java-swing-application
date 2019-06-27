@@ -12,6 +12,7 @@ import LabsProject.NetworkInteraction.Result;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -25,6 +26,7 @@ import java.util.ResourceBundle;
 import static javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS;
 
 public class MyJFrame extends JFrame {
+    final private EmptyBorder emptyBorder = new EmptyBorder(5,5,5,5);
     final ResourceBundle resource = ResourceBundle.getBundle("GuiLabels");
     private Config config;
     private MyModelTable modelTable;
@@ -48,7 +50,7 @@ public class MyJFrame extends JFrame {
         this.config = config;
         conn = new ConnectionClient(config.getAddress(), config.getPort());
         Result res1 = conn.sendAndGetAnswer(new Show());
-        getContentPane().setLayout(new GridBagLayout());
+        getContentPane().setLayout(new BorderLayout());
         //setSize(1000, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -62,6 +64,7 @@ public class MyJFrame extends JFrame {
         TableColumn column = null;
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+
         DefaultTableCellRenderer emojiRenderer = new DefaultTableCellRenderer();
         emojiRenderer.setHorizontalAlignment( JLabel.CENTER );
         emojiRenderer.setFont(new Font("Serif", Font.BOLD, 18));
@@ -87,92 +90,74 @@ public class MyJFrame extends JFrame {
                     column.setCellRenderer(emojiRenderer);
                     break;
             }
-            column.setCellRenderer(emojiRenderer);
+            //column.setCellRenderer(emojiRenderer);
 
         }
         JScrollPane scrollpane = new JScrollPane(table);
         scrollpane.setPreferredSize(new Dimension(700, 400));
 
 
-        GridBagConstraints CfTH = new GridBagConstraints();
-        CfTH.weightx = 100;
-        CfTH.weighty = 100;
-        CfTH.gridx = 1;
-        CfTH.gridy = 0;
-        CfTH.gridwidth = 2;
-        CfTH.gridheight = 1;
         JLabel tableheader = new JLabel(resource.getString("tableheader"));
         tableheader.setFont(new Font("Serif", Font.BOLD, 16));
         tableheader.setHorizontalAlignment(JLabel.CENTER);
         tableheader.setLabelFor(scrollpane);
-        CfTH.insets = new Insets(5, 5, 0, 5);
-        getContentPane().add(tableheader, CfTH);
 
-        GridBagConstraints CfT = new GridBagConstraints();
-        CfT.weightx = 100;
-        CfT.weighty = 100;
-        CfT.gridx = 0;
-        CfT.gridy = 1;
-        CfT.gridwidth = 10;
-        CfT.gridheight = 20;
-        CfTH.insets = new Insets(0, 5, 5, 5);
+
+
         scrollpane.setBorder(BorderFactory.createLineBorder(Color.black));
-        getContentPane().add(scrollpane, CfT);
 
-        GridBagConstraints CfUL = new GridBagConstraints();
-        CfUL.weightx = 100;
-        CfUL.weighty = 100;
-        CfUL.gridx = 10;
-        CfUL.gridy = 0;
-        CfUL.gridwidth = 10;
-        CfUL.gridheight = 1;
-        CfUL.insets = new Insets(5, 5, 5, 5);
+
         JLabel UserHeader = new JLabel(resource.getString("userheader"));
         UserHeader.setFont(new Font("Serif", Font.BOLD, 16));
         UserHeader.setHorizontalAlignment(JLabel.CENTER);
-        getContentPane().add(UserHeader, CfUL);
 
-        GridBagConstraints CfU = new GridBagConstraints();
-        CfU.weightx = 100;
-        CfU.weighty = 100;
-        CfU.gridx = 10;
-        CfU.gridy = 1;
-        CfU.gridwidth = 10;
-        CfU.gridheight = 5;
-        CfU.insets = new Insets(5, 5, 5, 5);
+
+
         this.userPanel = new UserPanel(config, this);
         userPanel.setFont(new Font("Serif", Font.PLAIN, 14));
-        userPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-        getContentPane().add(userPanel, CfU);
+        userPanel.setBorder(emptyBorder);
 
 
-        GridBagConstraints mapHeader = new GridBagConstraints();
-        mapHeader.weightx = 100;
-        mapHeader.weighty = 100;
-        mapHeader.gridx = 10;
-        mapHeader.gridy = 6;
-        mapHeader.gridwidth = 10;
-        mapHeader.gridheight = 1;
-        mapHeader.insets = new Insets(5, 5, 5, 5);
         JLabel hed = new JLabel(resource.getString("map"));
         hed.setFont(new Font("Serif", Font.BOLD, 16));
         hed.setHorizontalAlignment(JLabel.CENTER);
-        getContentPane().add(hed, mapHeader);
 
-        GridBagConstraints map = new GridBagConstraints();
-        map.weightx = 100;
-        map.weighty = 100;
-        map.gridx = 10;
-        map.gridy = 7;
-        map.gridwidth = 10;
-        map.gridheight = 13;
-        map.insets = new Insets(5, 5, 5, 5);
+
+
         JPanel panelForMap = new JPanel();
         this.canvas = new MyCanvas(res1.getHumans());
         canvas.paint(getGraphics());
-        panelForMap.add(canvas);
-        panelForMap.setBorder(BorderFactory.createLineBorder(Color.black));
-        getContentPane().add(panelForMap, map);
+        JPanel panelForCanvas = new JPanel();
+        panelForCanvas.setBorder(BorderFactory.createLineBorder(Color.black));
+        panelForCanvas.add(canvas);
+        panelForMap.setLayout(new BorderLayout());
+        panelForMap.add(hed, BorderLayout.NORTH);
+        panelForMap.add(panelForCanvas, BorderLayout.SOUTH);
+
+        JPanel panelforheader = new JPanel();
+        panelforheader.setLayout(new GridLayout(1,2));
+        panelforheader.add(tableheader);
+        panelforheader.add(UserHeader);
+        panelforheader.setBorder(emptyBorder);
+        getContentPane().add(panelforheader, BorderLayout.NORTH);
+        JPanel panelForLeftSide = new JPanel();
+        panelForLeftSide.setLayout(new CardLayout());
+        panelForLeftSide.add(scrollpane);
+        panelForLeftSide.setBorder(emptyBorder);
+        getContentPane().add(panelForLeftSide, BorderLayout.WEST);
+
+        JPanel panelForRightSide = new JPanel();
+        panelForRightSide.setLayout(new BoxLayout(panelForRightSide, BoxLayout.Y_AXIS));
+        JPanel PanelForUserPanel = new JPanel();
+        PanelForUserPanel.setLayout(new CardLayout());
+        PanelForUserPanel.add(userPanel);
+        PanelForUserPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        panelForRightSide.add(PanelForUserPanel);
+        panelForRightSide.add(Box.createVerticalStrut(5));
+        panelForRightSide.add(panelForMap);
+        panelForRightSide.setBorder(emptyBorder);
+
+        getContentPane().add(panelForRightSide, BorderLayout.EAST);
         pack();
         timer.start();
     }
