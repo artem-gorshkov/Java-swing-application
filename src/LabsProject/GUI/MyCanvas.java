@@ -40,18 +40,7 @@ public class MyCanvas extends Canvas {
     }
 
     private void drawMan(Graphics g, int x, int y, int size, Color color, Condition cond) {
-        String emo = null;
-        switch (cond) {
-            case ALARM:
-                emo = "\uD83D\uDE12";
-                break;
-            case SCARED:
-                emo = "\uD83D\uDE1E";
-                break;
-            case CALM:
-                emo = "\uD83D\uDE10";
-                break;
-        }
+        String emo = MyModelTable.getSmile(cond);
         char[] emoji = emo.toCharArray();
 
 
@@ -77,9 +66,8 @@ public class MyCanvas extends Canvas {
         g2.drawLine(neck.x, neck.y, torso.x, torso.y); // torso
         g2.drawLine(torso.x, torso.y, leftFoot.x, leftFoot.y); // left foot
         g2.drawLine(torso.x, torso.y, rightFoot.x, rightFoot.y); // right foot
-        //g.fillOval(head.x, head.y, diameter, diameter); // head
         g2.setFont(new Font("Serif", Font.PLAIN, size/2));
-        g2.drawChars(emoji, 0, 2, head.x-(3*(size/50)), head.y+(12*(size/50)));
+        g2.drawChars(emoji, 0, 2, head.x-(5*(size/50)), head.y+(11*(size/50)));
         g2.setColor(previous);
     }
 

@@ -5,6 +5,7 @@ import LabsProject.Commands.Command;
 import LabsProject.Commands.Load;
 import LabsProject.Commands.Show;
 import LabsProject.Nature.CanFruit;
+import LabsProject.Nature.Homosapiens.Condition;
 import LabsProject.Nature.Homosapiens.Human;
 import LabsProject.NetworkInteraction.ConnectionClient;
 import LabsProject.NetworkInteraction.ManagerCollection;
@@ -14,33 +15,32 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static LabsProject.Nature.Homosapiens.Condition.*;
 import static javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS;
 
 public class MyJFrame extends JFrame {
-    final private EmptyBorder emptyBorder = new EmptyBorder(5,5,5,5);
+    final private EmptyBorder emptyBorder = new EmptyBorder(5, 5, 5, 5);
     final ResourceBundle resource = ResourceBundle.getBundle("GuiLabels");
     private Config config;
     private MyModelTable modelTable;
     private MyCanvas canvas;
     private JPanel userPanel;
     private ConnectionClient conn;
+    private boolean flag = true;
     final private Timer timer = new Timer(500, (event) -> {
         Command show = new Show();
         List<Human> newHum = conn.sendAndGetAnswer(show).getHumans();
         if (modelTable.getHumans() != null && newHum != null)
-        if(!(newHum.containsAll(modelTable.getHumans()) && modelTable.getHumans().containsAll(newHum))) {
-            System.out.println("pererisvivau");
-            updateColl(newHum);
-        }
+            if (!(newHum.containsAll(modelTable.getHumans()) && modelTable.getHumans().containsAll(newHum))) {
+                System.out.println("pererisvivau");
+                updateColl(newHum);
+            }
     });
 
     public MyJFrame(String str, Config config) {
@@ -55,44 +55,51 @@ public class MyJFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
-        this.modelTable = new MyModelTable(res1.getHumans());
+        this.modelTable = new MyModelTable(res1.getHumans(), this);
         JTable table = new JTable(modelTable);
         table.setFillsViewportHeight(true);
+
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(modelTable);
         table.setRowSorter(sorter);
-        sorter.setSortable(4, false);
-        TableColumn column = null;
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 
-        DefaultTableCellRenderer emojiRenderer = new DefaultTableCellRenderer();
-        emojiRenderer.setHorizontalAlignment( JLabel.CENTER );
-        emojiRenderer.setFont(new Font("Serif", Font.BOLD, 18));
+        sorter.setSortable(4, false);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        JComboBox<String> condCombo = new JComboBox<>();
+        condCombo.addItem("\uD83D\uDE12");
+        condCombo.addItem("\uD83D\uDE1E");
+        condCombo.addItem("\uD83D\uDE10");
+        condCombo.addItem("\uD83D\uDE00");
+        TableCellEditor condEditor = new DefaultCellEditor(condCombo);
+
+        TableColumn column = null;
         for (int i = 0; i < 5; i++) {
             column = table.getColumnModel().getColumn(i);
             switch (i) {
                 case 0:
-                    column.setPreferredWidth(25);
+                    column.setPreferredWidth(10);
                     column.setCellRenderer(centerRenderer);
                     break;
                 case 1:
-                    column.setPreferredWidth(100);
+                    column.setPreferredWidth(50);
                     break;
                 case 2:
                     column.setPreferredWidth(150);
                     column.setCellRenderer(centerRenderer);
                     break;
                 case 3:
-                    column.setPreferredWidth(50);
+                    column.setPreferredWidth(75);
                     break;
                 case 4:
                     column.setPreferredWidth(50);
-                    column.setCellRenderer(emojiRenderer);
+                    column.setCellRenderer(new EmogiTableCellRenderer());
+                    column.setCellEditor(condEditor);
                     break;
             }
-            //column.setCellRenderer(emojiRenderer);
-
         }
+
+
         JScrollPane scrollpane = new JScrollPane(table);
         scrollpane.setPreferredSize(new Dimension(700, 400));
 
@@ -103,14 +110,12 @@ public class MyJFrame extends JFrame {
         tableheader.setLabelFor(scrollpane);
 
 
-
         scrollpane.setBorder(BorderFactory.createLineBorder(Color.black));
 
 
         JLabel UserHeader = new JLabel(resource.getString("userheader"));
         UserHeader.setFont(new Font("Serif", Font.BOLD, 16));
         UserHeader.setHorizontalAlignment(JLabel.CENTER);
-
 
 
         this.userPanel = new UserPanel(config, this);
@@ -121,7 +126,6 @@ public class MyJFrame extends JFrame {
         JLabel hed = new JLabel(resource.getString("map"));
         hed.setFont(new Font("Serif", Font.BOLD, 16));
         hed.setHorizontalAlignment(JLabel.CENTER);
-
 
 
         JPanel panelForMap = new JPanel();
@@ -135,7 +139,7 @@ public class MyJFrame extends JFrame {
         panelForMap.add(panelForCanvas, BorderLayout.SOUTH);
 
         JPanel panelforheader = new JPanel();
-        panelforheader.setLayout(new GridLayout(1,2));
+        panelforheader.setLayout(new GridLayout(1, 2));
         panelforheader.add(tableheader);
         panelforheader.add(UserHeader);
         panelforheader.setBorder(emptyBorder);
@@ -181,5 +185,17 @@ public class MyJFrame extends JFrame {
                 UIManager.put(key, font);
             }
         }
+    }
+
+    public Config getConfig() {
+        return config;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 }

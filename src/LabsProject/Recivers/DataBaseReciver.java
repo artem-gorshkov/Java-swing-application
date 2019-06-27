@@ -4,6 +4,7 @@ import LabsProject.Nature.Homosapiens.Condition;
 import LabsProject.Nature.Homosapiens.Human;
 import LabsProject.Nature.Homosapiens.Propetyies.MaterialProperty;
 import LabsProject.Nature.Homosapiens.Propetyies.Property;
+import org.postgresql.core.SqlCommand;
 
 import java.awt.*;
 import java.sql.*;
@@ -58,6 +59,17 @@ public class DataBaseReciver implements Reciver {
         rs.next();
         return HumanFromTable(rs);
 
+    }
+    public void changeHuman(Human human) throws SQLException {
+        final String change = "update Humans set birthday = ?, timezone = ?, condition = ?, cordX = ?, cordY = ? where name = ?";
+        PreparedStatement pst = conn.prepareStatement(change);
+        pst.setObject(1, human.getBirthday().toOffsetDateTime());
+        pst.setString(2, human.getBirthday().getZone().toString());
+        pst.setString(3, human.getCondition().toString());
+        pst.setDouble(4, human.getCordX());
+        pst.setDouble(5, human.getCordY());
+        pst.setString(6, human.getName());
+        pst.executeUpdate();
     }
 
     public int addHuman(Human human, String login) throws SQLException {
