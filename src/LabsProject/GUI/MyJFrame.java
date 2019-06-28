@@ -189,5 +189,7 @@ public class MyJFrame extends JFrame {
     public Config getConfig() {
         return config;
     }
-
+    public List<Human> getHuman() {
+        return modelTable.getHumans();
+    }
 }

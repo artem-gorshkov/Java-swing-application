@@ -29,7 +29,11 @@ public class RemoveFrame extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         setLayout(new BorderLayout());
-        TextField removeF = new TextField();
+        JComboBox<String> removeF = new JComboBox<>();
+        int size = frame.getHuman().size();
+        for(int i = 0; i < size; i++) {
+            removeF.addItem(frame.getHuman().get(i).getName());
+        }
         add(removeF, BorderLayout.NORTH);
 
         JPanel panelForButton = new JPanel();
@@ -38,7 +42,7 @@ public class RemoveFrame extends JFrame {
         JButton removeB = new JButton(resource.getString("enter"));
         JButton exitB = new JButton(resource.getString("inexit"));
         removeB.addActionListener(e->{
-            Command command = new Remove(removeF.getText());
+            Command command = new Remove((String) removeF.getSelectedItem());
             command.addNick(config.getNickname());
             Result res = frame.getConn().sendAndGetAnswer(command);
             frame.updateColl(res.getHumans());
