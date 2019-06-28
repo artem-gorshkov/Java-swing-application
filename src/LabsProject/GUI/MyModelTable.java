@@ -1,12 +1,10 @@
 package LabsProject.GUI;
 
-import LabsProject.Commands.Send;
+import LabsProject.Commands.SendAndChange;
 import LabsProject.Nature.Homosapiens.Condition;
 import LabsProject.Nature.Homosapiens.Human;
 
-import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -14,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 import static LabsProject.Nature.Homosapiens.Condition.*;
 
@@ -70,7 +67,7 @@ public class MyModelTable extends AbstractTableModel {
                 ZonedDateTime newtime = ZonedDateTime.ofLocal(time, human.getBirthday().getZone(), human.getBirthday().getOffset());
                 if (!zonedDateTime.equals(newtime)) {
                     human.setBirthday(newtime);
-                    frame.updateColl(frame.getConn().sendAndGetAnswer(new Send(null, human)).getHumans());
+                    frame.updateColl(frame.getConn().sendAndGetAnswer(new SendAndChange(null, human)).getHumans());
                 }
                 break;
             case 3:
@@ -79,7 +76,7 @@ public class MyModelTable extends AbstractTableModel {
                     ZonedDateTime newtime1 = ZonedDateTime.ofInstant(human.getBirthday().toInstant(), ZoneId.of(str));
                     if (!zonedDateTime1.equals(newtime1)) {
                         human.setBirthday(newtime1);
-                        frame.updateColl(frame.getConn().sendAndGetAnswer(new Send(null, human)).getHumans());
+                        frame.updateColl(frame.getConn().sendAndGetAnswer(new SendAndChange(null, human)).getHumans());
                     }
                 } catch (Throwable e) {
                 }
@@ -89,7 +86,7 @@ public class MyModelTable extends AbstractTableModel {
                 Condition newcond = getCond(str);
                 if (!cond.equals(newcond)) {
                     human.setCondition(newcond);
-                    frame.updateColl(frame.getConn().sendAndGetAnswer(new Send(null, human)).getHumans());
+                    frame.updateColl(frame.getConn().sendAndGetAnswer(new SendAndChange(null, human)).getHumans());
                 }
                 break;
             default:

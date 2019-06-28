@@ -33,35 +33,50 @@ public class UserPanel extends JPanel {
         Name.setFont(serif);
         Name.setHorizontalAlignment(JLabel.CENTER);
         add(Name);
-        JLabel colorHeader  = new JLabel(resource.getString("yourColor"));
+        JLabel colorHeader = new JLabel(resource.getString("yourColor"));
         colorHeader.setHorizontalAlignment(JLabel.CENTER);
         add(colorHeader);
         JPanel panel = new JPanel();
         panel.setBackground(new Color(config.getColor()));
         add(panel);
-        TextField console = new TextField();
-        console.setFont(arial);
-        add(console);
+//        TextField console = new TextField();
+//        console.setFont(arial);
+//        add(console);
+
+        JButton insert = new JButton(resource.getString("insert"));
+        insert.setFont(arial);
+        insert.addActionListener(e -> {
+            new insertFrame(resource.getString("insert"), config, frame);
+        });
+        add(insert);
+
         JButton changeLanguage = new JButton(resource.getString("changeLanguage"));
         changeLanguage.addActionListener((event) -> {
             JFrame change = new ChangeLanguageFrame("Change language");
         });
         changeLanguage.setFont(arial);
         add(changeLanguage);
-        JButton sendCommand = new JButton(resource.getString("sendCommand"));
-        sendCommand.setFont(arial);
-        sendCommand.addActionListener((event) -> {
-            if (!console.getText().equals("")) {
-                this.command = Console.getCommandFromGUI(console.getText());
-                console.setText("");
-                if (command !=  null) {
-                    command.addNick(config.getNickname());
-                    Result res = frame.getConn().sendAndGetAnswer(command);
-                    frame.updateColl(res.getHumans());
-                }
-            }
+
+        JButton removeB = new JButton(resource.getString("remove"));
+        removeB.addActionListener(e -> {
+            new RemoveFrame(resource.getString("remove"), config, frame);
         });
-        add(sendCommand);
+        add(removeB);
+
+//        JButton sendCommand = new JButton(resource.getString("sendCommand"));
+//        sendCommand.setFont(arial);
+//        sendCommand.addActionListener((event) -> {
+//            if (!console.getText().equals("")) {
+//                this.command = Console.getCommandFromGUI(console.getText());
+//                console.setText("");
+//                if (command !=  null) {
+//                    command.addNick(config.getNickname());
+//                    Result res = frame.getConn().sendAndGetAnswer(command);
+//                    frame.updateColl(res.getHumans());
+//                }
+//            }
+//        });
+//        add(sendCommand);
         JButton exitButton = new JButton(resource.getString("exit"));
         exitButton.addActionListener((event) -> {
             System.exit(0);

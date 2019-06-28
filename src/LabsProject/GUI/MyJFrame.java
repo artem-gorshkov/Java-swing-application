@@ -32,7 +32,6 @@ public class MyJFrame extends JFrame {
     private MyCanvas canvas;
     private JPanel userPanel;
     private ConnectionClient conn;
-    private boolean flag = true;
     final private Timer timer = new Timer(500, (event) -> {
         Command show = new Show();
         List<Human> newHum = conn.sendAndGetAnswer(show).getHumans();
@@ -191,11 +190,4 @@ public class MyJFrame extends JFrame {
         return config;
     }
 
-    public boolean isFlag() {
-        return flag;
-    }
-
-    public void setFlag(boolean flag) {
-        this.flag = flag;
-    }
 }

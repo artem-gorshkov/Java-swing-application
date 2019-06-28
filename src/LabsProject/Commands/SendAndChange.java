@@ -8,9 +8,9 @@ import LabsProject.Recivers.Reciver;
 
 import java.sql.SQLException;
 
-public class Send extends AbstractCommand {
+public class SendAndChange extends AbstractCommand {
     private Human human;
-    public Send(String arguments, Human human) {
+    public SendAndChange(String arguments, Human human) {
         super(arguments);this.human = human;
     }
 
