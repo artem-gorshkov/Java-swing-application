@@ -1,2 +1,2 @@
-# LabsProject
-prog, first course, 2 sem
+# Java desktop application 
+using PostreSQL, UDP and Swing for GUI
