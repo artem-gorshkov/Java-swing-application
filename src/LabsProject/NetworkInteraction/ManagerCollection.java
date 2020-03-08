@@ -13,48 +13,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.*;
+import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 public class ManagerCollection {
-
-
-    private ConcurrentSkipListMap<String, Human> collection = new ConcurrentSkipListMap<>();
 
     ManagerCollection() {
 
     }
 
-    public void setCollection(ConcurrentSkipListMap<String, Human> collection) {
-        this.collection = collection;
-    }
-
-    public ConcurrentSkipListMap<String, Human> getCollection() {
-        return collection;
-    }
-
-    public Human put(String key, Human value) {
-        if (!key.equals(value.getName())) {
-            value.setName(key);
-        }
-        return collection.put(key, value);
-    }
-
-    public Human put(Human value) {
-        if (value == null) {
-            return null;
-        } else {
-            return collection.put(value.getName(), value);
-        }
-    }
-
-    public Human remove(String key) {
-        Human hum = collection.remove(key);
-        return hum;
-    }
-
-    public void exportfromfile(String path) throws IOException {
+    public static List<Human> exportfromfile(String path)  {
         try (Scanner scan = new Scanner(Paths.get(path))) {
+            List<Human> list = new LinkedList<>();
             if (scan.hasNextLine()) {
                 String str = scan.nextLine();
                 if (!str.equals("{\"Humans\" : [")) throw new JSONException();
@@ -63,22 +33,26 @@ public class ManagerCollection {
                 String str = scan.nextLine();
                 if (str.charAt(str.length() - 1) == ',') {
                     str = str.substring(0, str.length() - 1);
-                    this.put(parseHuman(str));
+                    list.add(parseHuman(str));
                 } else {
                     if (!str.equals("]}")) {
-                        this.put(parseHuman(str.substring(0, str.length() - 2)));
+                        list.add(parseHuman(str.substring(0, str.length() - 2)));
                     }
                     if (!str.substring(str.length() - 2).equals("]}")) throw new JSONException();
                 }
             }
+            return list;
         } catch (IOException e) {
             System.err.println("File not found");
-            throw e;
+
         } catch (java.lang.StringIndexOutOfBoundsException | JSONException e) {
             System.err.println("Invalid JSON Format");
+
         } catch (Throwable e) {
             System.err.println("error");
+
         }
+        return null;
     }
 
     public static Human parseHuman(String str) throws JSONException {
@@ -117,36 +91,35 @@ public class ManagerCollection {
         Object condition = jsonObject.get("condition");
         human.setCondition(Condition.valueOf((String) condition));
         Object birhday = jsonObject.get("birthday");
-        if (birhday != null) human.setBirthday(new Date(Long.valueOf(birhday.toString())));
-        else human.setBirthday(new Date());
+        if (birhday != null) human.setBirthday(ZonedDateTime.parse((String) birhday));
+        else human.setBirthday(ZonedDateTime.now());
         return human;
-
     }
 
-    public void saveToFile(String path) {
-        String newpath = System.getenv(path);
-        try (PrintWriter writer = new PrintWriter(newpath)) {
+    public static String saveToFile(String path, List<Human> list) {
+        try (PrintWriter writer = new PrintWriter(path)) {
             writer.println("{\"Humans\" : [");
             boolean i = true;
-            for (Map.Entry<String, Human> entry : collection.entrySet()) {
+            for (Human human : list) {
                 if (i) {
                     i = false;
                 } else {
                     writer.println(",");
                 }
-                writer.print(JSON.toJSONString(entry.getValue()));
+                writer.print(JSON.toJSONString(human));
             }
             writer.print("]}");
+            return "Save to: " + path;
         } catch (FileNotFoundException e) {
-            System.err.println("Can't save information in file\nFile not found");
+            return "Can't save information in file\nFile not found";
         } catch (JSONException | NullPointerException e) {
-            System.err.println("Can't save Human to file\nInvalid syntax");
+            return "Can't save Human to file\nInvalid syntax";
         }
     }
 
-    public void outCollection() {
-        this.getCollection().forEach((s, human) -> {
-            System.out.println(s + " = " + human.toString());
+    public static void outCollection(List<Human> humans) {
+        humans.forEach(human -> {
+            System.out.println(human.toString());
         });
     }
 }

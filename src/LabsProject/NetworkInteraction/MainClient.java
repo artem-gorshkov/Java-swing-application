@@ -1,6 +1,9 @@
 package LabsProject.NetworkInteraction;
 
 
+import LabsProject.Commands.Authorization;
+import LabsProject.Commands.Command;
+import LabsProject.Commands.Registration;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -30,19 +33,28 @@ public class MainClient {
                 enterPort();
             }
         }
-        System.out.println("Hello, Lab6, Try to use \"help\" to get more information");
-        ConnectionClient connection = new ConnectionClient(serverAddress, port);
+        System.out.println("Hello!");
+        ConnectionClient conn = new ConnectionClient(serverAddress, port);
         Console console = new Console();
+        Command inComm; Result answer;
+        do {
+            inComm = console.authorization();
+            answer = conn.sendAndGetAnswer(inComm);
+        }  while (!conn.handlePacket(answer, (Authorization) inComm));
+        if(inComm instanceof Registration)
+            do {
+                inComm = console.authorization();
+                answer = conn.sendAndGetAnswer(inComm);
+            }  while (!conn.handlePacket(answer, (Authorization) inComm));
+        System.out.println("Now you can enter command. Press \"help\" for more information");
         while (true) {
-            Command command = console.exec();
-            connection.send(command);
-            if (connection.getInterruptedCommand() != null) {
-                connection.send(connection.getInterruptedCommand());
-                connection.setInterruptedCommand(null);
-            }
+            Command command = console.giveCommand();
+            Result result = conn.sendAndGetAnswer(command);
+            conn.handlePacket(result, command);
         }
 
     }
+
     private static void enterHost() {
         InetAddress Address;
         boolean k = true;
